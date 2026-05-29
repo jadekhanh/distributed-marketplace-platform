@@ -3,17 +3,30 @@ spring:
     name: distributed-marketplace-platform
 
   datasource:
-    url: jdbc:mysql://localhost:3306/marketplace
+    url: jdbc:mysql://localhost:3306/jade-marketplace
     username: root
     password: root
+
+  data:
+    redis:
+      host: localhost
+      port: 6380
+
+  aws:
+    region: ${AWS_REGION:us-east-2}
+    s3:
+      bucket: ${AWS_S3_BUCKET:marketplace-dev}
 
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
   flyway:
     enabled: true
 
-server:
-  port: 8080
+  server:
+    port: 8080
