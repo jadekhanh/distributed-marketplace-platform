@@ -17,16 +17,14 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public AuthService(
-            AuthenticationManager authenticationManager,
-            JwtService jwtService
-    ) {
+    // constructor
+    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
     }
 
     /**
-     * Authenticates a user and returns a JWT token
+     * Authenticates a user and returns a JWT response
      * Flow:
      * 1. Validate email/password
      * 2. Spring Security loads user from database
@@ -34,18 +32,20 @@ public class AuthService {
      * 4. JWT token is generated
      * 5. Token is returned to client
      */
-    public String login(String email, String password) {
+    public LoginResponse login(String email, String password) {
 
+        // authenticate user with email and password
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        email,
-                        password
-                )
+                new UsernamePasswordAuthenticationToken(email,password)
         );
 
-        return jwtService.generateToken(
-                authentication.getName(),
-                authentication.getAuthorities()
-        );
+        // get user from authentication
+        User user = userService.findByEmail(authentication.getName());
+
+        // get JWT token from user email and authorities
+        String token = jwtService.generateToken(user.getEmail(), user.getAuthorities());
+
+        // generates JWT login response from user and token
+        return userService.toLoginResponse(user, token);
     }
 }
