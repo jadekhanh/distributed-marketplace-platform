@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 /**
- * UserService handles all logic for users
+ * User service handles all logic for users
  *
  * Responsibilities:
  * - Register users

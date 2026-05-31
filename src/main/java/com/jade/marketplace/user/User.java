@@ -1,17 +1,6 @@
 package com.jade.marketplace.user;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -24,7 +13,7 @@ import java.util.Set;
  * UserDetails represents an application user
  * Spring Security can use it during authentication
  * 
- * @Entity to indicate this class "User" should be stored in database as a database row
+ * @Entity to indicate this class "User" is a database table
  * @Table name is called "users"
  * 
  * "users" table where each row is a User

@@ -31,8 +31,8 @@ import java.util.Optional;
  * - Database
  * 
  * Note:
- * - User class = Java representation of one row in the users table
- * - User repository = tool to search, delete, edit those rows in MySQL
+ * - User class = Java representation of "users" table
+ * - User repository = tool to search, delete, edit "users" table in MySQL
  */
 public interface UserRepository extends JpaRepository<User, Long> {
 
@@ -44,6 +44,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * - find User through UserRepository findbyEmail()
      * - get User user
      * - get User's email through User getEmail()
+     * 
+     * Optional to indicate there might or might be not User by this email
+     * Use Optional to avoid NullPointerException error and just go straight to ResourceNotFoundException
      * 
      * Even though there's no implementation to this function, JPA knows that we're looking for email by reading method name
      */

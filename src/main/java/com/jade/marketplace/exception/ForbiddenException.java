@@ -10,7 +10,7 @@ package com.jade.marketplace.exception;
 public class ForbiddenException extends RuntimeException {
 
     // constructor
-    public ForbiddenException(String messgae) {
+    public ForbiddenException(String message) {
         // calls constructor of parent class RuntimeException(String message)
         super(message);
     }

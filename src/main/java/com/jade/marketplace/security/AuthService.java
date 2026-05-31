@@ -5,6 +5,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.jade.marketplace.user.LoginResponse;
+import com.jade.marketplace.user.User;
+import com.jade.marketplace.user.UserService;
+
 /**
  * Handles user authentication logic
  * Responsibilities:
@@ -16,11 +20,13 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final UserService userService;
 
     // constructor
     public AuthService(AuthenticationManager authenticationManager, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.userService = null;
     }
 
     /**

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 /**
- * Data required to register a new user
+ * Data required inside request to register a new user
  *
  * This is a record type instead of class because it only carries request data
  * Getter functions such as constructor, getEmail(), getPassword(), getfirstName(), getlastName() are automatically generates
@@ -31,8 +31,8 @@ public record RegisterRequest(
         @NotBlank(message = "Last name is required")
         String lastName,
 
-        // Role role must be @NotNull
-        @NotNull(message = "Role is required")
+        // Role role must be @NotBlank
+        @NotBlank(message = "Role is required")
         Role role
 
 ) {

@@ -36,7 +36,7 @@ public class GlobalExceptionHandler extends DataFetcherExceptionResolverAdapter 
             return exception.getMessage();
         }
 
-        if (exception instanceof ProductOutOfStock) {
+        if (exception instanceof ProductOutOfStockException) {
             return exception.getMessage();
         }
 
