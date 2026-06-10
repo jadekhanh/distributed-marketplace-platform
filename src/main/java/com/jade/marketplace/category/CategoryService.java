@@ -1,13 +1,11 @@
 package com.jade.marketplace.category;
 
-import org.apache.kafka.common.security.oauthbearer.internals.secured.ValidateException;
 import org.springframework.stereotype.Service;
 
 import com.jade.marketplace.exception.ResourceNotFoundException;
 import com.jade.marketplace.exception.ValidationException;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Category service handles all logic for category
@@ -61,11 +59,34 @@ public class CategoryService {
 
     /**
      * Updates category fields
+     * @return 
      */
-    public void updateCategory(Long id, UpdateCategoryRequest request) {
+    public Category updateCategory(Long id, UpdateCategoryRequest request) {
         // get category by its id
         Category category = findById(id);
 
-        
+        // if request name is not null, update category name
+        if (request.name() != null && !request.name().isBlank()) {
+            category.setName(request.name());
+        }
+
+        // if request description is not null, update category description
+        if (request.description() != null && !request.description().isBlank()) {
+            category.setDescription(request.description());
+        }
+
+        // save and return updated category into MySQL database using CategoryRepository
+        return categoryRepository.save(category);
+    }
+
+    /**
+     * Delete a category by its id
+     */
+    public void deleteCategory(Long id) {
+        // get category by its id
+        Category category = findById(id);
+
+        // delete category from MySQL database using CategoryRepository
+        categoryRepository.delete(category);
     }
 }

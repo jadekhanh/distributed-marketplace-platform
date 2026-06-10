@@ -5,6 +5,7 @@ import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 
@@ -24,33 +25,15 @@ public class GlobalExceptionHandler extends DataFetcherExceptionResolverAdapter 
         /**
          * get all error messages for custom exceptions
          */
-        if (exception instanceof ResourceNotFoundException) {
-            return exception.getMessage();
-        }
-
-        if (exception instanceof UnauthorizedException) {
-            return exception.getMessage();
-        }
-
-        if (exception instanceof ValidationException) {
-            return exception.getMessage();
-        }
-
-        if (exception instanceof ProductOutOfStockException) {
-            return exception.getMessage();
-        }
-
-        if (exception instanceof DuplicateEmailException) {
-            return exception.getMessage();
-        }
-
-        if (exception instanceof ForbiddenException) {
-            return exception.getMessage();
-        }
-
-        if (exception instanceof ResourceNotFoundException) {
-            return exception.getMessage();
-        }
+        // Custom application exceptions
+        if (exception instanceof ResourceNotFoundException
+            || exception instanceof UnauthorizedException
+            || exception instanceof ValidationException
+            || exception instanceof ProductOutOfStockException
+            || exception instanceof DuplicateEmailException
+            || exception instanceof ForbiddenException) {
+        return exception.getMessage();
+    }
 
         // exception where fields have certain constraints but do not meet them
         // example: password does not have at least 8 characters
@@ -59,8 +42,8 @@ public class GlobalExceptionHandler extends DataFetcherExceptionResolverAdapter 
                 // turns a collection of errors into pipeline to process each item
                 .stream()
                 // turns each error into its message
-                // [fieldError, fieldError] -> ["Email is required", "Password too short"]
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                // [error message, error message] -> ["Email is required", "Password too short"]
+                .map(error -> error.getPropertyPath() + ": " + error.getMessage())
                 // put all transformed results into a List
                 .collect(Collectors.joining(", "));
         }
@@ -68,7 +51,7 @@ public class GlobalExceptionHandler extends DataFetcherExceptionResolverAdapter 
         // exception where Spring fails to bind/validate request data due to field-level errors
         // example: blank fields
         if (exception instanceof BindException bindException) {
-            return BindException.getBindingResult()
+            return bindException.getBindingResult()
                 // get all field binding errors
                 .getFieldErrors()
                 // turns a collection of errors into pipeline to process each item
@@ -92,13 +75,13 @@ public class GlobalExceptionHandler extends DataFetcherExceptionResolverAdapter 
      * DataFetchingEnvironment = contains extra info about the GraphQL request currently being processed. It can include: field name, arguments, current user context, GraphQL path, source object
      */
     @Override
-    protected GraphQLError resolveToSingleError(Throwable exception, DataFetchingEnvironment environment) {
+    protected GraphQLError resolveToSingleError(@NonNull Throwable exception, @NonNull DataFetchingEnvironment environment) {
         // get message from exception
         String message = getReadableMessage(exception);
 
         // return GraphQL-friendly error response
         // GraphqlErrorBuilder = a built-in helper to build error response
-        return GraphqlErrorBuilder.newErrow(environment)
+        return GraphqlErrorBuilder.newError(environment)
             // set the message of the response
             .message(message)
             // build the response
