@@ -25,16 +25,16 @@ public class CategoryMutation {
      * Creates a new category
      */
     @MutationMapping
-    public Category createCategory(@Argument @Valid CreateCategoryRequest input) {
-        return categoryService.createCategory(input);
+    public Category createCategory(@Argument @Valid CreateCategoryRequest request) {
+        return categoryService.createCategory(request);
     }
 
     /**
      * Updates an existing category
      */
     @MutationMapping
-    public Category updateCateory(@Argument Long id, @Argument UpdateCategoryRequest input) {
-        return categoryService.updateCategory(id, input);
+    public Category updateCateory(@Argument Long id, @Argument UpdateCategoryRequest request) {
+        return categoryService.updateCategory(id, request);
     }
 
     /**
