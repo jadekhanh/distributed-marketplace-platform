@@ -116,7 +116,7 @@ public class CartItem {
      * Calculate subtotal for this item
      * Does not need to pass quantity and product parameters because CartItem already knows its own quantity and product
      */
-    public BigDecimal calculateItemSubtotal() {
+    public BigDecimal getItemSubtotal() {
         return BigDecimal.valueOf(quantity).multiply(product.getPrice());
     }
     

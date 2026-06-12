@@ -149,7 +149,6 @@ public class Inventory {
             this.reservedQuantity = 0;
         }
 
-
         // update last time the inventory is updated
         this.updatedAt = LocalDateTime.now();
     }

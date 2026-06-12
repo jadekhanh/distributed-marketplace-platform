@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jade.marketplace.product.Product;
 import com.jade.marketplace.user.User;
 
 import jakarta.persistence.CascadeType;

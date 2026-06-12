@@ -1,7 +1,6 @@
 package com.jade.marketplace.product;
 
 import java.util.List;
-import java.util.Locale.Category;
 
 import org.springframework.stereotype.Service;
 

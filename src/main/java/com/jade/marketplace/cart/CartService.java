@@ -3,8 +3,6 @@ package com.jade.marketplace.cart;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import org.apache.kafka.common.security.oauthbearer.internals.secured.ValidateException;
-
 import com.jade.marketplace.exception.ResourceNotFoundException;
 import com.jade.marketplace.product.Product;
 import com.jade.marketplace.product.ProductService;
@@ -180,7 +178,7 @@ public class CartService {
         Cart cart = getCart();
 
         // get subtotal for each cart item and then add them all
-        return cart.getItems().stream().map(CartItem::calculateItemSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return cart.getItems().stream().map(CartItem::getItemSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
 
