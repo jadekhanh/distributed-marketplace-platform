@@ -23,6 +23,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PaymentConsumer {
+
+    private final PaymentService paymentService;
+
+    /**
+     * Constructor
+     * @param paymentService
+     */
+    public PaymentConsumer(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
     
     /**
      * Consumes order placed event
