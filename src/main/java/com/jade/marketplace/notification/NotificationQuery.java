@@ -3,10 +3,12 @@ package com.jade.marketplace.notification;
 import java.util.List;
 
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 /**
  * GraphQL for query notification data
  */
+@Controller
 public class NotificationQuery {
     
     private final NotificationService notificationService;

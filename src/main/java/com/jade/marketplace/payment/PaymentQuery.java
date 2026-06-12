@@ -2,12 +2,14 @@ package com.jade.marketplace.payment;
 
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import jakarta.validation.Valid;
 
 /**
  * GraphQL for query payment data
  */
+@Controller
 public class PaymentQuery {
 
     private final PaymentService paymentService;

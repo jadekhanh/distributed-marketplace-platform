@@ -92,7 +92,6 @@ public class Notification {
 
     /**
      * Get user who receives the notification
-     * @return
      */
     public User getUser() {
         return user;
