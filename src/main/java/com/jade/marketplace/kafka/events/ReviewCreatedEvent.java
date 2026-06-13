@@ -3,7 +3,7 @@ package com.jade.marketplace.kafka.events;
 /**
  * Event published when a review is added
  */
-public record ReviewAddedEvent (
+public record ReviewCreatedEvent (
 
     Long reviewId,
 

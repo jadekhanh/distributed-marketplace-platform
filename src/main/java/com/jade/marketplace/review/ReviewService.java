@@ -75,7 +75,7 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
 
         // send Kafka event
-        kafkaTemplate.send(KafkaTopics.PAYMENT_PROCESSED, new ReviewAddedEvent(savedReview.getId(), product.getId(), user.getId(), savedReview.getAmount()));
+        kafkaTemplate.send(KafkaTopics.PAYMENT_PROCESSED, new ReviewCreatedEvent(savedReview.getId(), product.getId(), user.getId(), savedReview.getAmount()));
 
         // return saved review
         return savedReview;
