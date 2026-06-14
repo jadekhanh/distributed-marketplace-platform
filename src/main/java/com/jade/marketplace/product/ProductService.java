@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.jade.marketplace.category.CategoryService;
 import com.jade.marketplace.exception.ForbiddenException;
 import com.jade.marketplace.exception.ResourceNotFoundException;
+import com.jade.marketplace.redis.ProductCacheService;
 import com.jade.marketplace.seller.SellerProfile;
 import com.jade.marketplace.seller.SellerService;
 
@@ -25,16 +25,16 @@ import jakarta.transaction.Transactional;
 public class ProductService {
     
     private final ProductRepository productRepository;
-    private final CategoryService categoryService;
     private final SellerService sellerService;
+    private final ProductCacheService productCacheService;
 
     /**
      * Constructor
      */
-    public ProductService(ProductRepository productRepository, CategoryService categoryService, SellerService sellerService) {
-        this.categoryService = categoryService;
+    public ProductService(ProductRepository productRepository, SellerService sellerService, ProductCacheService productCacheService) {
         this.productRepository = productRepository;
         this.sellerService = sellerService;
+        this.productCacheService = productCacheService;
     }
 
     /**
@@ -113,8 +113,14 @@ public class ProductService {
         // add images to the new product
         addImages(product, request.url());
 
+        // save product
+        Product savedProduct = productRepository.save(product);
+
+        // remove product from Redis cache
+        productCacheService.removeProduct(savedProduct.getId());
+
         // return the saved product into repository
-        return productRepository.save(product);
+        return savedProduct;
     }
 
     /**
@@ -166,8 +172,14 @@ public class ProductService {
             addImages(product, request.urls());
         }
 
-        // return a saved product into product repository
-        return productRepository.save(product);
+        // save product
+        Product savedProduct = productRepository.save(product);
+
+        // remove product from Redis cache
+        productCacheService.removeProduct(savedProduct.getId());
+
+        // return the saved product into repository
+        return savedProduct;
     }
 
     /**
@@ -185,8 +197,12 @@ public class ProductService {
         // check if the seller profile matches the seller profile of this product
         validateProductOwner(product, sellerProfile);
 
-        // delete the product from repository and return true
+        // delete the product from repository
         productRepository.delete(product);
+
+        // remove product from Redis cache
+        productCacheService.removeProduct(productId);
+
         return true;
     }
 }

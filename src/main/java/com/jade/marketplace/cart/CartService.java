@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.jade.marketplace.exception.ResourceNotFoundException;
 import com.jade.marketplace.product.Product;
 import com.jade.marketplace.product.ProductService;
+import com.jade.marketplace.redis.CartCacheService;
 import com.jade.marketplace.user.User;
 import com.jade.marketplace.user.UserService;
 
@@ -25,14 +26,16 @@ public class CartService {
     private final CartRepository cartRepository;
     private final UserService userService;
     private final ProductService productService;
+    private final CartCacheService cartCacheService;
 
     /**
      * Constructor
      */
-    public CartService(CartRepository cartRepository, UserService userService, ProductService productService) {
+    public CartService(CartRepository cartRepository, UserService userService, ProductService productService, CartCacheService cartCacheService) {
         this.cartRepository = cartRepository;
         this.productService = productService;
         this.userService = userService;
+        this.cartCacheService = cartCacheService;
     }
 
     /**
@@ -98,11 +101,17 @@ public class CartService {
             cart.addItem(item);
         }
 
-        // mark that cart is updated
+        // mark cart updated
         cart.updated();
 
+        // save cart into repository
+        Cart savedCart = cartRepository.save(cart);
+
+        // remove cart from Redis cache
+        cartCacheService.removeCart(cart.getUser().getId());
+
         // return saved cart
-        return cartRepository.save(cart);
+        return savedCart;
     }
 
     /**
@@ -129,8 +138,14 @@ public class CartService {
         // mark cart updated
         cart.updated();
 
+        // save cart into repository
+        Cart savedCart = cartRepository.save(cart);
+
+        // remove cart from Redis cache
+        cartCacheService.removeCart(cart.getUser().getId());
+
         // return saved cart
-        return cartRepository.save(cart);
+        return savedCart;
     }
 
     /**
@@ -149,8 +164,14 @@ public class CartService {
         // mark cart updated
         cart.updated();
 
+        // save cart into repository
+        Cart savedCart = cartRepository.save(cart);
+
+        // remove cart from Redis cache
+        cartCacheService.removeCart(cart.getUser().getId());
+
         // return saved cart
-        return cartRepository.save(cart);
+        return savedCart;
     }
 
     /**
@@ -166,8 +187,14 @@ public class CartService {
         // mark cart updated
         cart.updated();
 
+        // save cart into repository
+        Cart savedCart = cartRepository.save(cart);
+
+        // remove cart from Redis cache
+        cartCacheService.removeCart(cart.getUser().getId());
+
         // return saved cart
-        return cartRepository.save(cart);
+        return savedCart;
     }
 
     /**

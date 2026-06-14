@@ -3,17 +3,17 @@ package com.jade.marketplace.order;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.jade.marketplace.cart.Cart;
 import com.jade.marketplace.cart.CartItem;
 import com.jade.marketplace.cart.CartService;
-import com.jade.marketplace.common.constants.KafkaTopics;
 import com.jade.marketplace.exception.OrderProcessingException;
 import com.jade.marketplace.exception.ResourceNotFoundException;
-import com.jade.marketplace.inventory.Inventory;
 import com.jade.marketplace.inventory.InventoryService;
+import com.jade.marketplace.kafka.events.OrderCancelledEvent;
+import com.jade.marketplace.kafka.events.OrderPlacedEvent;
+import com.jade.marketplace.kafka.producer.OrderEventProducer;
 import com.jade.marketplace.user.User;
 import com.jade.marketplace.user.UserService;
 
@@ -35,17 +35,17 @@ public class OrderService {
     private final CartService cartService;
     private final UserService userService;
     private final InventoryService inventoryService;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final OrderEventProducer orderEventProducer;
 
     /**
      * Constructor
      */
-    public OrderService(OrderRepository orderRepository, CartService cartService, UserService userService, InventoryService inventoryService, KafkaTemplate<String, Object> kafkaTemplate) {
+    public OrderService(OrderRepository orderRepository, CartService cartService, UserService userService, InventoryService inventoryService, OrderEventProducer orderEventProducer) {
         this.orderRepository = orderRepository;
         this.cartService = cartService;
         this.userService = userService;
         this.inventoryService = inventoryService;
-        this.kafkaTemplate = kafkaTemplate;
+        this.orderEventProducer = orderEventProducer;
     }
 
     /**
@@ -77,7 +77,7 @@ public class OrderService {
     }
 
     /**
-     * Publish one Kafka event per saved order
+     * Publish a order-placed Kafka event per saved order
      */
     private void publishOrderPlacedEvents(Order order) {
         // for each order item in the order
@@ -86,9 +86,21 @@ public class OrderService {
             OrderPlacedEvent event = new OrderPlacedEvent(item.getId(), item.getProduct().getId(), item.getQuantity());
 
             // send a Kafka event
-            kafkaTemplate.send(KafkaTopics.ORDER_PLACED, event);
+            orderEventProducer.publishOrderPlaced(event);
         }
     }
+
+    /**
+     * Publish a order-cancelled Kafka event per cancelled order
+     */
+    private void publishOrderCancelledEvents(Order order) {
+        // create an order cancellation
+        OrderCancelledEvent event = new OrderCancelledEvent(order.getId(), order.getBuyer().getId(), "Order cancelled by user");
+
+        // send Kafka event
+        orderEventProducer.publishOrderCancelled(event);
+    }
+
 
     /**
      * Places an order using items inside cart
@@ -110,7 +122,7 @@ public class OrderService {
     @Transactional
     public Order placeOrder() {
         // get buyer from the server
-        User buyer = userService.getCurrentUser();
+        User user = userService.getCurrentUser();
 
         // get cart from the server
         Cart cart = cartService.getCart();
@@ -124,7 +136,7 @@ public class OrderService {
         BigDecimal totalAmount = calculateOrderTotal(cart);
 
         // create a new order
-        Order order = new Order(buyer, totalAmount);
+        Order order = new Order(user, totalAmount);
 
         // for every cart item inside cart
         for (CartItem cartItem : cart.getItems()) {
@@ -162,8 +174,14 @@ public class OrderService {
         // set order status as CANCELLED
         order.setOrderStatus(OrderStatus.CANCELLED);
 
-        // save order from repository
-        return orderRepository.save(order);
+        // save the order
+        Order savedOrder = orderRepository.save(order);
+
+        // publish order cancelled Kafka event
+        publishOrderCancelledEvents(savedOrder);
+
+        // return saved order
+        return savedOrder;
     }
 
 }

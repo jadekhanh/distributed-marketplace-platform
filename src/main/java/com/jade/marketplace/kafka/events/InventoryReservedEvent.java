@@ -5,8 +5,6 @@ package com.jade.marketplace.kafka.events;
  */
 public record InventoryReservedEvent (
 
-    Long orderId,
-
     Long productId,
 
     Integer quantity

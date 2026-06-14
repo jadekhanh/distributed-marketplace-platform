@@ -1,7 +1,13 @@
 package com.jade.marketplace.inventory;
 
+import org.apache.kafka.common.security.oauthbearer.internals.secured.ValidateException;
+import org.springframework.stereotype.Service;
+
 import com.jade.marketplace.exception.ProductOutOfStockException;
 import com.jade.marketplace.exception.ResourceNotFoundException;
+import com.jade.marketplace.kafka.events.InventoryReservationFailedEvent;
+import com.jade.marketplace.kafka.events.InventoryReservedEvent;
+import com.jade.marketplace.kafka.producer.InventoryEventProducer;
 import com.jade.marketplace.product.Product;
 
 import jakarta.transaction.Transactional;
@@ -9,15 +15,18 @@ import jakarta.transaction.Transactional;
 /**
  * Inventory Services handles all logic related to inventory
  */
+@Service
 public class InventoryService {
     
     private final InventoryRepository inventoryRepository;
+    private final InventoryEventProducer inventoryEventProducer;
 
     /**
      * Constructor
      */
-    public InventoryService(InventoryRepository inventoryRepository) {
+    public InventoryService(InventoryRepository inventoryRepository, InventoryEventProducer inventoryEventProducer) {
         this.inventoryRepository = inventoryRepository;
+        this.inventoryEventProducer = inventoryEventProducer;
     }
 
     /**
@@ -43,20 +52,35 @@ public class InventoryService {
      * Reserves product inventory by product ID and quantity for a pending order
      */
     @Transactional
-    public Inventory reserveInventory(Long id, Integer quantity) {
+    public Inventory reserveInventory(Long productId, Integer quantity) {
         // find product inventory or throw new error
-        Inventory inventory = inventoryRepository.findByProductIdForUpdate(id).orElseThrow(() -> new ResourceNotFoundException("Inventory not found for product id: " + id));
+        Inventory inventory = inventoryRepository.findByProductIdForUpdate(productId).orElseThrow(() -> new ResourceNotFoundException("Inventory not found for product id: " + productId));
+
+        // check if the quantity requested is valid
+        if (quantity == null || quantity <= 0) {
+            throw new ValidateException("Quantity must be greater than 0!");
+        }
 
         // check if we can can reserve by requested quantity
         if (!inventory.canReserve(quantity)) {
-            throw new ProductOutOfStockException("Product out of stock!");
+            // publish inventory reservation failed Kafka event
+            inventoryEventProducer.publishInventoryReservationFailed(new InventoryReservationFailedEvent(productId, quantity, "Not enough inventory!"));
+
+            // throw error
+            throw new ProductOutOfStockException("Not enough inventory!");
         }
 
         // reserve product by quantity
-        inventory.confirmReservation(quantity);
+        inventory.makeReservation(quantity);
+
+        // save inventory into repository
+        Inventory savedInventory = inventoryRepository.save(inventory);
+
+        // publish inventory-reserved event
+        inventoryEventProducer.publishInventoryReserved(new InventoryReservedEvent(productId, quantity));
 
         // return saved inventory
-        return inventoryRepository.save(inventory);
+        return savedInventory;
     }
 
     /**

@@ -2,12 +2,12 @@ package com.jade.marketplace.payment;
 
 import java.util.UUID;
 
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import com.jade.marketplace.common.constants.KafkaTopics;
 import com.jade.marketplace.exception.ResourceNotFoundException;
 import com.jade.marketplace.exception.ValidationException;
+import com.jade.marketplace.kafka.events.PaymentProcessedEvent;
+import com.jade.marketplace.kafka.producer.PaymentEventProducer;
 import com.jade.marketplace.order.Order;
 import com.jade.marketplace.order.OrderService;
 import com.jade.marketplace.order.OrderStatus;
@@ -22,15 +22,15 @@ public class PaymentService {
     
     private final PaymentRepository paymentRepository;
     private final OrderService orderService;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final PaymentEventProducer paymentEventProducer;
 
     /**
      * Constructor
      */
-    public PaymentService(PaymentRepository paymentRepository, OrderService orderService, KafkaTemplate<String, Object> kafkaTemplate) {
+    public PaymentService(PaymentRepository paymentRepository, OrderService orderService, PaymentEventProducer paymentEventProducer) {
         this.paymentRepository = paymentRepository;
         this.orderService = orderService;
-        this.kafkaTemplate = kafkaTemplate;
+        this.paymentEventProducer = paymentEventProducer;
     }
 
     /**
@@ -100,8 +100,8 @@ public class PaymentService {
         // mark order as CONFIRMED
         order.setOrderStatus(OrderStatus.CONFIRMED);
 
-        // send a Kafka event
-        kafkaTemplate.send(KafkaTopics.PAYMENT_PROCESSED, new PaymentProcessedEvent(savedPayment.getId(), order.getId(), savedPayment.getAmount()));
+        // publish payment-processed Kafka event
+        paymentEventProducer.publishPaymentProcessed(new PaymentProcessedEvent(savedPayment.getId(), order.getId(), savedPayment.getAmount()));
 
         // return saved payment
         return savedPayment;

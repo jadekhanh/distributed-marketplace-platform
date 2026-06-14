@@ -2,13 +2,13 @@ package com.jade.marketplace.review;
 
 import java.util.List;
 
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import com.jade.marketplace.common.constants.KafkaTopics;
 import com.jade.marketplace.exception.ForbiddenException;
 import com.jade.marketplace.exception.ResourceNotFoundException;
 import com.jade.marketplace.exception.ValidationException;
+import com.jade.marketplace.kafka.events.ReviewCreatedEvent;
+import com.jade.marketplace.kafka.producer.ReviewEventProducer;
 import com.jade.marketplace.product.Product;
 import com.jade.marketplace.product.ProductService;
 import com.jade.marketplace.user.User;
@@ -25,16 +25,16 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserService userService;
     private final ProductService productService;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final ReviewEventProducer reviewEventProducer;
 
     /**
      * Constructor
      */
-    public ReviewService(ReviewRepository reviewRepository, UserService userService, ProductService productService, KafkaTemplate<String, Object> kafkaTemplate) {
+    public ReviewService(ReviewRepository reviewRepository, UserService userService, ProductService productService, ReviewEventProducer reviewEventProducer) {
         this.reviewRepository = reviewRepository;
         this.userService = userService;
         this.productService = productService;
-        this.kafkaTemplate = kafkaTemplate;
+        this.reviewEventProducer = reviewEventProducer;
     }
 
     /**
@@ -74,8 +74,8 @@ public class ReviewService {
         // save review
         Review savedReview = reviewRepository.save(review);
 
-        // send Kafka event
-        kafkaTemplate.send(KafkaTopics.PAYMENT_PROCESSED, new ReviewCreatedEvent(savedReview.getId(), product.getId(), user.getId(), savedReview.getAmount()));
+        // publish review-created Kafka event
+        reviewEventProducer.publishReviewCreated(new ReviewCreatedEvent(savedReview.getId(), product.getId(), user.getId(), request.rating()));
 
         // return saved review
         return savedReview;

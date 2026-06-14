@@ -4,7 +4,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import com.jade.marketplace.common.constants.KafkaTopics;
-import com.jade.marketplace.kafka.events.PaymentFailedEvent;
 import com.jade.marketplace.kafka.events.PaymentProcessedEvent;
 
 /**
@@ -35,13 +34,6 @@ public class PaymentEventProducer {
      */
     public void publishPaymentProcessed(PaymentProcessedEvent event) {
         kafkaTemplate.send(KafkaTopics.PAYMENT_PROCESSED, event);
-    }
-
-    /**
-     * Publishes a payment-failed event
-     */
-    public void publishPaymentProcessed(PaymentFailedEvent event) {
-        kafkaTemplate.send(KafkaTopics.PAYMENT_FAILED, event);
     }
 
 }
