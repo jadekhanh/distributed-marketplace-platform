@@ -64,7 +64,7 @@ public class Order {
     /**
      * A column for total price amount of the order
      */
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
     /**

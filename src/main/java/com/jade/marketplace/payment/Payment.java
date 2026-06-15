@@ -75,19 +75,19 @@ public class Payment {
     /**
      * A column for timestamp when payment is completed
      */
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime completedAt;
 
     /**
      * A column for timestamp when payment is failed
      */
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime failedAt;
 
     /**
      * A column for timestamp when payment is refunded
      */
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime refundedAt;
 
     /**

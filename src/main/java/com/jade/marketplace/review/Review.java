@@ -56,7 +56,7 @@ public class Review {
     /**
      * A column for written comment
      */
-    @Column
+    @Column(length = 2000)
     private String comment;
 
     /**
