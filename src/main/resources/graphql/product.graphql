@@ -1,0 +1,40 @@
+type Product {
+    id: ID!
+    sellerProfile: sellerProfile!
+    category: Category!
+    name: String!
+    description: String!
+    price: Float!
+    quantity: Integer!
+    images: [ProductImage!]!
+    createdAt: LocalDateTime!
+}
+
+type ProductImage {
+    id: ID!
+    product: Product!
+    url: String!
+}
+
+input CreateProductRequest {
+    name: String!
+    description: String
+    price: Float!
+    quantity: Integer!
+    category: Category!
+    url: [String!]!
+}
+
+extend type Query {
+    product(id: ID!): Product!
+    products(): [Product!]!
+    productsByCategory(categoryId: ID!): [Product!]!
+    productsBySeller(sellerId: ID!): [Product!]!
+    searchProducts(keyword: String!): [Product!]!
+}
+
+extend type Mutation {
+    createProduct(request: CreateProductRequest!): Product!
+    updateProduct(id: ID!, request: UpdateProductRequest!): Product!
+    deleteProduct(id: ID!): Boolean!
+}

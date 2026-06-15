@@ -1,0 +1,27 @@
+enum NotificationType {
+    ORDER_PLACED
+    PAYMENT_PROCESSED
+    ORDER_CONFIRMED
+    ORDER_CANCELLED
+    PRODUCT_UPDATED
+    REVIEW_ADDED
+}
+
+type Notification {
+    id: ID!
+    user: User!
+    type: NotificationType!
+    message: String!
+    read: Boolean!
+    createdAt: LocalDateTime!
+}
+
+extend type Query {
+    findAllotifications(userId: String!): [Notification!]!
+    findAllUnreadNotifications(userId: String!): [Notification!]!
+}
+
+extend type Mutation {
+    markAsRead(notificationId: ID!): Notification!
+    markAllAsRead: Boolean!
+}

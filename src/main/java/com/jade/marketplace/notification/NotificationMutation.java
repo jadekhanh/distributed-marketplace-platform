@@ -33,7 +33,7 @@ public class NotificationMutation {
      * Marks all unread notifications as read
      */
     @MutationMapping
-    public void markAllAsRead() {
-        notificationService.markAllAsRead();
+    public boolean markAllAsRead() {
+        return notificationService.markAllAsRead();
     }
 }

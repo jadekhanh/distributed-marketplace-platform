@@ -82,11 +82,13 @@ public class CategoryService {
     /**
      * Delete a category by its id
      */
-    public void deleteCategory(Long id) {
+    public boolean deleteCategory(Long id) {
         // get category by its id
         Category category = findById(id);
 
         // delete category from MySQL database using CategoryRepository
         categoryRepository.delete(category);
+
+        return true;
     }
 }

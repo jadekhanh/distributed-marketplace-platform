@@ -30,6 +30,14 @@ public class ReviewMutation {
     }
 
     /**
+     * Update a review for a product
+     */
+    @MutationMapping
+    public Review updateReview(@Valid @Argument UpdateReviewRequest request) {
+        return reviewService.updateReview(request);
+    }
+
+    /**
      * Delete a review for a product
      */
     @MutationMapping

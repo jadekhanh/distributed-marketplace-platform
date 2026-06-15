@@ -1,0 +1,27 @@
+enum OrderStatus {
+    PENDING
+    CONFIRMED
+    PROCESSING
+    SHIPPED
+    DELIVERED
+    CANCELLED
+}
+
+type Order {
+    id: ID!
+    buyer: User!
+    items: [OrderItem!]!
+    status: OrderStatus
+    totalAmount: Float!
+    createdAt: LocalDateTime!
+}
+
+extend type Query {
+    findById(id: ID!): Order!
+    findAllOrders: [Order!]!
+}
+
+extend type Mutation {
+    placeOrder: Order!
+    cancelOrder(id: ID!): Order!
+}

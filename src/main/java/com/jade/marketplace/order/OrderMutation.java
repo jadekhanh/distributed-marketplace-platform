@@ -34,6 +34,4 @@ public class OrderMutation {
     public Order cancelOrder(@Argument Long id) {
         return orderService.cancelOrder(id);
     }
-
-    
 }

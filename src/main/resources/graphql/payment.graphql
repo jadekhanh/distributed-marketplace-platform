@@ -1,0 +1,34 @@
+enum PaymentStatus {
+    PENDING
+    COMPLETED
+    FAILED
+    REFUNDED
+}
+
+type Payment {
+    id: ID!
+    order: Order!
+    totalAmount: Float!
+    status: PaymentStatus!
+    transactionId: String!
+    refundTransactionId: String!
+    createdAt: LocalDateTime!
+    completedAt: LocalDateTime!
+    failedAt: LocalDateTime!
+    refundedAt: LocalDateTime!
+}
+
+input CreatePaymentRequest {
+    orderId: ID!
+    paymentMethodToken: String!
+}
+
+extend type Mutation {
+    createPayment(request: CreatePaymentRequest!): Payment!
+    refundPayment(paymentId: ID!): Payment!
+}
+
+extend type Query {
+    payment(paymentId: ID!): Payment!
+    paymentByOrder(orderId: ID!): Payment!
+}

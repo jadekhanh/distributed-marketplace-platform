@@ -5,6 +5,8 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.stereotype.Controller;
 
+import com.jade.marketplace.security.LoginRequest;
+
 /**
  * GraphQL mutations related to users
  *
@@ -65,7 +67,8 @@ public class UserMutation {
      * )
      */
     @MutationMapping
-    public LoginResponse register(@Argument @Valid RegisterRequest input) {
-        return userService.register(input);
+    public LoginResponse register(@Argument @Valid RegisterRequest request) {
+        return userService.register(request);
     }
+
 }

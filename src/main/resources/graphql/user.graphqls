@@ -1,0 +1,45 @@
+enum Role {
+    BUYER
+    SELLER
+    ADMIN
+}
+
+type User {
+    id: ID!
+    email: String!
+    firstName: String!
+    lastName: String!
+    roles: [Role!]!
+    createdAt: String!
+}
+
+input RegisterRequest {
+    email: String!
+    password: String!
+    firstName: String!
+    lastName: String!
+    role: Role
+}
+
+input LoginRequest {
+    email: String!
+    password: String!
+}
+
+input LoginResponse {
+    token: String!
+    userId: ID!
+    email: String!
+    firstName: String!
+    lastName: String!
+    roles: [Role!]!
+}
+
+extend type Query {
+    me: User!
+}
+
+extend type Mutation {
+    register(input: RegisterRequest): LoginResponse!
+    login(input: LoginRequest): LoginResponse!
+}

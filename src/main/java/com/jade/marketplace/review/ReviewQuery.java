@@ -35,7 +35,7 @@ public class ReviewQuery {
      * Get all reviews belonging to a product in decsending order of created at timestamp
      */
     @QueryMapping
-    public List<Review> reviews(@Valid @Argument Long productId) {
+    public List<Review> reviewsByProduct(@Valid @Argument Long productId) {
         return reviewService.findByProductIdOrderByCreatedAtDesc(productId);
     }
     

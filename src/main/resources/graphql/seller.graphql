@@ -1,0 +1,29 @@
+type SellerProfile {
+    id: ID!
+    user: User!
+    storeName: String!
+    description: String!
+    createdAt: String!
+}
+
+input CreateSellerProfileRequest {
+    storeName: String!
+    description: String!
+}
+
+input UpdateSellerProfileRequest {
+    storeName: String
+    description: String
+}
+
+extend type Query {
+    sellers: [SellerProfile!]!
+    seller(id: ID!): SellerProfile!
+    mySellerProfile: SellerProfile!
+}
+
+extend type Mutation {
+    createSellerProfile(request: CreateSellerProfileRequest!): SellerProfile!
+    updateMySellerProfile(request: UpdateSellerProfileRequest!): SellerProfile!
+    deleteMySellerProfile: Boolean!
+}

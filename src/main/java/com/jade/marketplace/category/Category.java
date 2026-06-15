@@ -2,7 +2,6 @@ package com.jade.marketplace.category;
 
 import jakarta.persistence.*;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 /**

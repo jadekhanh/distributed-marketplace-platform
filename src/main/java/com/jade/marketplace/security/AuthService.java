@@ -38,12 +38,10 @@ public class AuthService {
      * 4. JWT token is generated
      * 5. Token is returned to client
      */
-    public LoginResponse login(String email, String password) {
+    public LoginResponse login(LoginRequest request) {
 
         // authenticate user with email and password
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email,password)
-        );
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email() ,request.password()));
 
         // get user from authentication
         User user = userService.findByEmail(authentication.getName());

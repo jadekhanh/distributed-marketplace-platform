@@ -89,7 +89,7 @@ public class NotificationService {
      * Marks all notifcations as read
      */
     @Transactional
-    public void markAllAsRead() {
+    public boolean markAllAsRead() {
         // get user from server side
         User user = userService.getCurrentUser();
 
@@ -101,6 +101,8 @@ public class NotificationService {
             // save them into repository
             notificationRepository.save(notification);
         }
+
+        return true;
 
     }
     

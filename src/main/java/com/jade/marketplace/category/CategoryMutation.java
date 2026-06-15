@@ -41,7 +41,7 @@ public class CategoryMutation {
      * Deletes an existing category
      */
     @MutationMapping
-    public void deleteCategory(@Argument Long id) {
-        categoryService.deleteCategory(id);
+    public boolean deleteCategory(@Argument Long id) {
+        return categoryService.deleteCategory(id);
     }
 }

@@ -58,23 +58,13 @@ public class UserService {
         }
 
         // create new User from request information
-        User user = new User(
-                request.email(),
-                // encode password using password encoder algorithm
-                passwordEncoder.encode(request.password()),
-                request.firstName(),
-                request.lastName(),
-                Set.of(selectedRole)
-        );
+        User user = new User(request.email(), passwordEncoder.encode(request.password()), request.firstName(), request.lastName(), Set.of(selectedRole));
 
         // save this User into MySQL using UserRepository
         User savedUser = userRepository.save(user);
 
         // generate JWT token using JWTService with email and authorities
-        String token = jwtService.generateToken(
-                savedUser.getEmail(),
-                savedUser.getAuthorities()
-        );
+        String token = jwtService.generateToken(savedUser.getEmail(), savedUser.getAuthorities());
 
         // return a LoginResponse
         return toLoginResponse(savedUser, token);
@@ -84,20 +74,14 @@ public class UserService {
      * Finds a user by id by using UserRepository's findById()
      */
     public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found with id: " + id)
-                );
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 
     /**
      * Finds a user by email by using UserRepository's findByEmail()
      */
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found with email: " + email)
-                );
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
     }
 
     /**
@@ -107,17 +91,14 @@ public class UserService {
         /**
          * Authentication object used by Spring to store information about a logged-in user
          * Example:
-         * Name: jade@gmail.com
+         * Name: plushies@gmail.com
          * Role: BUYER
          * Authenticated: true
          * 
          * SecurityContext is where Spring stores a Authentication object
          * SecurityContextHolder is global storage area for all SecurityContext
          */
-        Authentication authentication =
-                // .getContext() = get SecurityContext
-                // .getAuthentication() = get the currently logged-in user
-                SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // get user's email from Authentication object
         // in this project: email is saved in name
@@ -131,13 +112,6 @@ public class UserService {
      * Converts a User entity into a LoginResponse record
      */
     public LoginResponse toLoginResponse(User user, String token) {
-        return new LoginResponse(
-                token,
-                user.getId(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getRoles()
-        );
+        return new LoginResponse(token, user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getRoles());
     }
 }

@@ -153,5 +153,4 @@ public class Inventory {
         this.updatedAt = LocalDateTime.now();
     }
 
-    
 }

@@ -52,7 +52,7 @@ public class AuthMutation {
      * - future requests sends token to every request
      */
     @MutationMapping
-    public LoginResponse login(@Argument String email, @Argument String password) {
-        return authService.login(email, password);
+    public LoginResponse login(@Argument LoginRequest request) {
+        return authService.login(request);
     }
 }
