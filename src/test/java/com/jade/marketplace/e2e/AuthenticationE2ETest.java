@@ -35,10 +35,10 @@ public class AuthenticationE2ETest {
     void registerAndLogin_shouldReturnJwtTokens() {
         // GraphQL mutation to register
         // input request: email, password, first name, last name, role
-        // output response: token, email, roles
+        // output response: token, email, role
         String registerMutation = """
                 mutation {
-                    register(input: {
+                    register(request: {
                         email: "echle@plushies.com",
                         password: "echlekhongcopybaiban!",
                         firstName: "Ech Le",
@@ -69,7 +69,7 @@ public class AuthenticationE2ETest {
         // output response: email, token
         String loginMutation = """
                 mutation {
-                    register(input: {
+                    register(request: {
                         email: "echle@plushies.com",
                         password: "echlekhongcopybaiban!"
                     }) {

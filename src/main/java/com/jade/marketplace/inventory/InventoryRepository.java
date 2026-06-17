@@ -29,6 +29,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
      * Optional = means inventory might not exist
      */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select i from Iventory i where i.product = :productId")
-    Optional<Inventory> findByProductIdForUpdate(Long id);
+    @Query("select i from Inventory i where i.product.id = :productId")
+    Optional<Inventory> findByProductIdForUpdate(Long productId);
 }

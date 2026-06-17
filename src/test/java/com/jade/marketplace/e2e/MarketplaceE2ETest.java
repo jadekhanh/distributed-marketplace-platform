@@ -61,7 +61,7 @@ public class MarketplaceE2ETest {
         String registerMutation = 
             """
                 mutation {
-                    register(input: {
+                    register(request: {
                         email: "%s",
                         password: "whoopiewhoopiedoop",
                         firstName: "%s",
@@ -70,7 +70,7 @@ public class MarketplaceE2ETest {
                     }) {
                         email
                         token
-                        role
+                        roles
                         }
                 }
             """.formatted(email, firstName, lastName, role);
@@ -146,7 +146,7 @@ public class MarketplaceE2ETest {
         String sellerMutation = 
             """
                 mutation {
-                    createSellerProfile(input: {
+                    createSellerProfile(request: {
                         storeName: "Pluhies Gang Store",
                         description: "Sell plushies gangsters"
                     }) {
@@ -166,7 +166,7 @@ public class MarketplaceE2ETest {
         String categoryMutation = 
             """
                 mutation {
-                    createCategory(input: {
+                    createCategory(request: {
                         name: "Toys",
                         description: "Toys for kitty and plushies gang",
                     }) {
@@ -186,7 +186,7 @@ public class MarketplaceE2ETest {
         String productMutation = 
             """
                 mutation {
-                    createProduct(input: {
+                    createProduct(request: {
                         name: "Ghostie ghostie",
                         description: "A Halloween ghostie to take care of you when you sleep!",
                         price: 35.95,
@@ -218,7 +218,7 @@ public class MarketplaceE2ETest {
         String cartMutation = 
                 """
                     mutation {
-                        addToCart(input: {
+                        addToCart(request: {
                             productId: "%s",
                             quantity: 1
                         }) {
@@ -261,7 +261,7 @@ public class MarketplaceE2ETest {
         String paymentMutation = 
             """
                 mutation {
-                    processPayment(input: {
+                    processPayment(request: {
                         orderId: "%s",
                         paymentMethodToken: "this-token-is-super-yummy!"
                     }) {

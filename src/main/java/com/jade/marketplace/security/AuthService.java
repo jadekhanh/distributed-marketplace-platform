@@ -23,10 +23,10 @@ public class AuthService {
     private final UserService userService;
 
     // constructor
-    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService) {
+    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
-        this.userService = null;
+        this.userService = userService;
     }
 
     /**

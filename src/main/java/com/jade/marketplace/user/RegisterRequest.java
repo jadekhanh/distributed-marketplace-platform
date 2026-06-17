@@ -2,6 +2,7 @@ package com.jade.marketplace.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
@@ -32,7 +33,7 @@ public record RegisterRequest(
         String lastName,
 
         // Role role must be @NotBlank
-        @NotBlank(message = "Role is required")
+        @NotNull(message = "Role is required")
         Role role
 
 ) {

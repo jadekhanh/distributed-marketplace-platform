@@ -26,7 +26,7 @@ input LoginRequest {
     password: String!
 }
 
-input LoginResponse {
+type LoginResponse {
     token: String!
     userId: ID!
     email: String!
@@ -40,6 +40,6 @@ extend type Query {
 }
 
 extend type Mutation {
-    register(input: RegisterRequest): LoginResponse!
-    login(input: LoginRequest): LoginResponse!
+    register(request: RegisterRequest): LoginResponse!
+    login(request: LoginRequest): LoginResponse!
 }

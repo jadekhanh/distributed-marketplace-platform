@@ -45,7 +45,7 @@ public class MarketplaceFlowIntegrationTest {
         String registerSellerMutation = 
             """
                 mutation {
-                    register(input: {
+                    register(request: {
                         email: "monkey@plushies.com",
                         password: "monkeyisfeelingfunny!",
                         firstName: "Monkey",
@@ -68,7 +68,7 @@ public class MarketplaceFlowIntegrationTest {
         String createSellerProfileMutation = 
             """
                 mutation {
-                    createSellerProfile(input: {
+                    createSellerProfile(request: {
                         storeName: "Plushies Store",
                         description: "Plushies store for Jade"
                     }) {
@@ -96,7 +96,7 @@ public class MarketplaceFlowIntegrationTest {
         String categoryMutation = 
             """
                 mutation {
-                    createCategory(input: {
+                    createCategory(request: {
                         name: "Toys",
                         description: "Toys for kitty and plushies gang",
                     }) {
@@ -115,7 +115,7 @@ public class MarketplaceFlowIntegrationTest {
         String productMutation = 
             """
                 mutation {
-                    createProduct(input: {
+                    createProduct(request: {
                         name: "Squishy ice cream",
                         description: "A pink squishy ice cream for plushies",
                         price: 12.99,
@@ -150,7 +150,7 @@ public class MarketplaceFlowIntegrationTest {
         String registerBuyerMutation = 
             """
                 mutation {
-                    register(input: {
+                    register(request: {
                         email: "jellycat@plushies.com",
                         password: "jellycatwantstoslapeveryone!",
                         firstName: "Jelly Cat",
@@ -174,7 +174,7 @@ public class MarketplaceFlowIntegrationTest {
         String addToCartMutation = 
             """
                 mutation {
-                    addToCart(input: {
+                    addToCart(request: {
                         productId: "%s",
                         quantity: 1
                     }) {

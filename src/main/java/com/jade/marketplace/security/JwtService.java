@@ -55,9 +55,7 @@ public class JwtService {
      */
     public String generateToken(String email, Collection<? extends GrantedAuthority> authorities) {
         // get user roles
-        List<String> roles = authorities.stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
+        List<String> roles = authorities.stream().map(GrantedAuthority::getAuthority).toList();
 
         // create timestamp
         Date now = new Date();
@@ -65,14 +63,7 @@ public class JwtService {
         Date expiration = new Date(now.getTime() + jwtExpirationMs);
 
         // build and return JWT token using email, roles, time stamp and expiration timestamp
-        return Jwts.builder()
-                .subject(email)
-                .claim("roles", roles)
-                .issuedAt(now)
-                .expiration(expiration)
-                // creates signature using signing key
-                .signWith(getSigningKey())
-                .compact();
+        return Jwts.builder().subject(email).claim("roles", roles).issuedAt(now).expiration(expiration).signWith(getSigningKey()).compact();
     }
 
     // extract email from the token
@@ -88,20 +79,11 @@ public class JwtService {
 
     // check if token is expired: has expiration before today's date
     private boolean isTokenExpired(String token) {
-        return extractClaims(token)
-                .getExpiration()
-                .before(new Date());
+        return extractClaims(token).getExpiration().before(new Date());
     }
 
     // a JWT token extract function using signing key
     private Claims extractClaims(String token) {
-        return Jwts.parser()
-                // tell JWT library which signing key to use
-                .verifyWith(getSigningKey())
-                .build()
-                // verify token
-                .parseSignedClaims(token)
-                // return claims/payload
-                .getPayload();
+        return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
     }
 }

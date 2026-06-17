@@ -4,6 +4,8 @@ import com.jade.marketplace.user.User;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.jade.marketplace.exception.ResourceNotFoundException;
 import com.jade.marketplace.exception.ValidationException;
 import com.jade.marketplace.user.Role;
@@ -20,6 +22,7 @@ import jakarta.transaction.Transactional;
  * Update seller profile
  * Find seller profiles
  */
+@Service
 public class SellerService {
     
     private final SellerRepository sellerRepository;

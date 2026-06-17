@@ -63,6 +63,12 @@ public class Inventory {
     private LocalDateTime updatedAt;
 
     /**
+     * Default constructor
+     */
+    public Inventory() {
+    }
+    
+    /**
      * Constructor
      */
     public Inventory(Product product, Integer availableQuantity) {

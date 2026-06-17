@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import com.jade.marketplace.order.Order;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
@@ -14,10 +15,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 /***
  * Represents payment record for an order
  */
+@Entity
+@Table(name = "payments")
 public class Payment {
     
     /**

@@ -95,6 +95,12 @@ public class Product {
     private List<ProductImage> images = new ArrayList<>();
 
     /**
+     * Default constructor
+     */
+    public Product() {
+    }
+
+    /**
      * Constructor
      */
     public Product(SellerProfile sellerProfile, String name, String description, Category category, BigDecimal price, Integer quantity) {

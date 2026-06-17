@@ -19,3 +19,10 @@ spring:
 logging:
   level:
     root: WARN
+
+aws:
+  s3:
+    region: us-east-1
+    bucket-name: test-bucket
+    access-key: test-access-key
+    secret-key: test-secret-key

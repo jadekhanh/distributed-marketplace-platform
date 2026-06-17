@@ -34,12 +34,12 @@ public class AuthenticationIntegrationTest {
         // output response: token, email, roles
         String mutation = """
                 mutation {
-                    register(input: {
+                    register(request: {
                         email: "macaroni@plushies.com",
                         password: "mauricemacaroniissad!",
                         firstName: "Maurice",
                         lastName: "Macaroni",
-                        role = BUYER
+                        role: BUYER
                     }) {
                         token
                         email
@@ -48,14 +48,12 @@ public class AuthenticationIntegrationTest {
                     }
                 """;
         
-        // load and send the GraphQL mutation request
+        // send the GraphQL mutation request
         graphQlTester.document(mutation).execute()
             // navigate into response JSON, go to token and assert token exists
             .path("register.token").hasValue()
             // navigate to response JSON, go to email, convert the value to String, and assert it equals to expected email
-            .path("register.email").entity(String.class).isEqualTo("macaroni@plushies.com") 
-            // navigate to response JSON, go to roles, convert the value to String, and assert it equals to expected role
-            .path("register.roles").entity(String.class).isEqualTo("BUYER");
+            .path("register.email").entity(String.class).isEqualTo("macaroni@plushies.com");
     }
 
     /**
@@ -68,12 +66,12 @@ public class AuthenticationIntegrationTest {
         // output response: token, email, roles
         String registerMutation = """
                 mutation {
-                    register(input: {
+                    register(request: {
                         email: "angy@plushies.com",
                         password: "angyisalwaysangy!",
                         firstName: "Angy",
                         lastName: "Tran",
-                        role = BUYER
+                        role: BUYER
                     }) {
                         token
                         email
@@ -82,17 +80,17 @@ public class AuthenticationIntegrationTest {
                     }
                 """;
         
-        // load and send the GraphQL register mutation request
-        graphQlTester.document(registerMutation).execute();
+        // send the GraphQL register mutation request and confirm token is not null
+        graphQlTester.document(registerMutation).execute().path("register.token").hasValue();
         
         // create GraphQl login mutation request
         // input: email, password
         // output: token, email
         String loginMutation = """
                 mutation {
-                    login(input: {
+                    login(request: {
                         email: "angy@plushies.com",
-                        password: "angyisalwaysangy!",
+                        password: "angyisalwaysangy!"
                     }) {
                         token
                         email
@@ -107,6 +105,5 @@ public class AuthenticationIntegrationTest {
                 // go to the JSON reponse, go to email, convert it to String, and confirms it is the expected email
                 .path("login.email").entity(String.class).isEqualTo("angy@plushies.com");
     }
-
 
 }

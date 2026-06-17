@@ -76,14 +76,14 @@ public class GlobalExceptionHandler extends DataFetcherExceptionResolverAdapter 
      */
     @Override
     protected GraphQLError resolveToSingleError(@NonNull Throwable exception, @NonNull DataFetchingEnvironment environment) {
-        // get message from exception
-        String message = getReadableMessage(exception);
+        // print stack trace
+        exception.printStackTrace();
 
         // return GraphQL-friendly error response
         // GraphqlErrorBuilder = a built-in helper to build error response
         return GraphqlErrorBuilder.newError(environment)
             // set the message of the response
-            .message(message)
+            .message(exception.getMessage())
             // build the response
             .build();
     }

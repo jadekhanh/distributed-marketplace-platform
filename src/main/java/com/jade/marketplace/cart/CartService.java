@@ -3,6 +3,8 @@ package com.jade.marketplace.cart;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.jade.marketplace.exception.ResourceNotFoundException;
 import com.jade.marketplace.product.Product;
 import com.jade.marketplace.product.ProductService;
@@ -21,6 +23,7 @@ import jakarta.validation.ValidationException;
  * Remove item from cart
  * Clear all items from cart
  */
+@Service
 public class CartService {
     
     private final CartRepository cartRepository;

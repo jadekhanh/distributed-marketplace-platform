@@ -33,7 +33,7 @@ public class CategoryMutation {
      * Updates an existing category
      */
     @MutationMapping
-    public Category updateCateory(@Argument Long id, @Argument UpdateCategoryRequest request) {
+    public Category updateCategory(@Argument Long id, @Argument UpdateCategoryRequest request) {
         return categoryService.updateCategory(id, request);
     }
 
