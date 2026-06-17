@@ -13,7 +13,7 @@ type Notification {
     type: NotificationType!
     message: String!
     read: Boolean!
-    createdAt: LocalDateTime!
+    createdAt: String!
 }
 
 extend type Query {

@@ -95,7 +95,8 @@ public class User implements UserDetails {
     private LocalDateTime createdAt;
 
     // default construction for User
-    public User() {}
+    public User() {
+    }
 
     // custom construction for User
     public User(String email, String password, String firstName, String lastName, Set<Role> roles) {

@@ -66,6 +66,12 @@ public class Review {
     private LocalDateTime createdAt;
 
     /**
+     * Default constructor
+     */
+    public Review() {
+    }
+
+    /**
      * Constructor
      */
     public Review(User user, Product product, Integer rating, String comment) {

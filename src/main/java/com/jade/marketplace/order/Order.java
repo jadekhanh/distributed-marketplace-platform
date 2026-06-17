@@ -74,6 +74,12 @@ public class Order {
     private LocalDateTime createdAt;
 
     /**
+     * Default constructor
+     */
+    public Order() {
+    }
+
+    /**
      * Constructor
      */
     public Order(User buyer, BigDecimal totalAmount) {

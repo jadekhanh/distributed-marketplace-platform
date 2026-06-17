@@ -1,21 +1,21 @@
 type Review {
     id: ID!
     product: Product!
-    rating: Integer!
+    rating: Int!
     comment: String!
-    createdAt: LocalDateTime!
+    createdAt: String!
     user: User!
 }
 
 input CreateReviewRequest {
     productId: ID!
-    rating: Integer!
+    rating: Int!
     comment: String
 }
 
 input UpdateReviewRequest {
     reviewId: ID
-    rating: Integer
+    rating: Int
     comment: String
 }
 

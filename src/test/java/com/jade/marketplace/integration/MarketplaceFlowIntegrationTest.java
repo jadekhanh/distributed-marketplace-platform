@@ -1,11 +1,18 @@
 package com.jade.marketplace.integration;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureGraphQlTester;
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
+
+import com.jade.marketplace.inventory.Inventory;
+import com.jade.marketplace.inventory.InventoryRepository;
+import com.jade.marketplace.product.Product;
+import com.jade.marketplace.product.ProductRepository;
 
 /**
  * E2E marketplace flow test
@@ -23,8 +30,9 @@ import org.springframework.test.context.ActiveProfiles;
  * @AutoConfigureGraphQLTester = creates GraphQLTester
  * @ActiceProfiles = loads application-test.yml -> prevent touching prod data
  */
-@SpringBootTest
-@AutoConfigureGraphQlTester
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureHttpGraphQlTester
+@AutoConfigureWebTestClient
 @ActiveProfiles("test")
 public class MarketplaceFlowIntegrationTest {
 
@@ -33,6 +41,18 @@ public class MarketplaceFlowIntegrationTest {
      */
     @Autowired
     private HttpGraphQlTester graphQlTester;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private InventoryRepository inventoryRepository;
+
+    @BeforeEach
+    void cleanDatabase() {
+        inventoryRepository.deleteAll();
+        productRepository.deleteAll();
+    }
 
     /**
      * Marketplace flow should create product and place order
@@ -50,7 +70,7 @@ public class MarketplaceFlowIntegrationTest {
                         password: "monkeyisfeelingfunny!",
                         firstName: "Monkey",
                         lastName: "Tran",
-                        role = SELLER
+                        role: SELLER
                     }) {
                         token
                         email
@@ -98,7 +118,7 @@ public class MarketplaceFlowIntegrationTest {
                 mutation {
                     createCategory(request: {
                         name: "Toys",
-                        description: "Toys for kitty and plushies gang",
+                        description: "Toys for kitty and plushies gang"
                     }) {
                         id
                         name
@@ -120,8 +140,8 @@ public class MarketplaceFlowIntegrationTest {
                         description: "A pink squishy ice cream for plushies",
                         price: 12.99,
                         quantity: 10,
-                        categoryId: "%s"
-                        imageUrl: [https://plushies.com/icecream.jpg]
+                        categoryId: "%s",
+                        url: "https://plushies.com/icecream.jpg"
                     }) {
                         id
                         name
@@ -143,6 +163,10 @@ public class MarketplaceFlowIntegrationTest {
             .execute()
             // get product ID
             .path("createProduct.id").entity(String.class).get();
+
+        // create inventory for product
+        Product product = productRepository.findById(Long.valueOf(productId)).orElseThrow();
+        inventoryRepository.save(new Inventory(product, 10));
         
         // GraphQL register buyer mutation request
         // input request: email, password, first name, last name, role
@@ -155,7 +179,7 @@ public class MarketplaceFlowIntegrationTest {
                         password: "jellycatwantstoslapeveryone!",
                         firstName: "Jelly Cat",
                         lastName: "Tran",
-                        role = BUYER
+                        role: BUYER
                     }) {
                         token
                         email
@@ -189,7 +213,6 @@ public class MarketplaceFlowIntegrationTest {
         // add items to buyer's cart and confirms that the JSON response has quantity entity that is equal to expected value = 1
         buyer.document(addToCartMutation).execute().path("addToCart.items[0].quantity").entity(Integer.class).isEqualTo(1);
     
-
         // create a GraphQL mutation to place an order
         String placeOrderMutation = 
             """
@@ -206,8 +229,8 @@ public class MarketplaceFlowIntegrationTest {
         buyer.document(placeOrderMutation).execute()
             // confirms JSON response has id entity that is not null
             .path("placeOrder.id").hasValue()
-            // confirms JSON response has status entity that is PENDING
-            .path("placeOrder.status").entity(String.class).isEqualTo("PENDING");
+            // confirms JSON response has status entity that is CONFIRMED
+            .path("placeOrder.status").entity(String.class).isEqualTo("CONFIRMED");
 
     }
 }

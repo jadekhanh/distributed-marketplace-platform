@@ -9,6 +9,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -58,6 +59,15 @@ public class ConcurrentCheckoutIntegrationTest {
     @Autowired
     private InventoryRepository inventoryRepository;
 
+    @BeforeEach
+    void cleanDatabase() {
+        inventoryRepository.deleteAll();
+        productRepository.deleteAll();
+        sellerRepository.deleteAll();
+        categoryRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     /**
      * A test where 20 buyers hitting inventory at the same time cannot oversell stock
      */
@@ -68,7 +78,7 @@ public class ConcurrentCheckoutIntegrationTest {
         userRepository.save(user);
 
         // create a seller profile
-        SellerProfile sellerProfile = new SellerProfile(user, "Plushies Store", "Pink store that sells cutie plushies!");
+        SellerProfile sellerProfile = new SellerProfile(user, "Plushies Gang Store", "Pink store that sells cutie plushies!");
         sellerRepository.save(sellerProfile);
 
         // create a category

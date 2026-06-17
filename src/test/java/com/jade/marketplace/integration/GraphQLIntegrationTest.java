@@ -3,6 +3,7 @@ package com.jade.marketplace.integration;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureGraphQlTester;
@@ -12,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.jade.marketplace.category.Category;
 import com.jade.marketplace.category.CategoryRepository;
+import com.jade.marketplace.inventory.InventoryRepository;
 import com.jade.marketplace.product.Product;
 import com.jade.marketplace.product.ProductRepository;
 import com.jade.marketplace.seller.SellerProfile;
@@ -48,13 +50,25 @@ public class GraphQLIntegrationTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private InventoryRepository inventoryRepository;
+
+    @BeforeEach
+    void cleanDatabase() {
+        inventoryRepository.deleteAll();
+        productRepository.deleteAll();
+        categoryRepository.deleteAll();
+        sellerRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     /**
      * Query categories should return a list of categories
      */
     @Test
     void categories_shouldReturnListofCategories() {
         // create a category
-        Category category = new Category("toys", "toys for everyone");
+        Category category = new Category("plushies", "cute plushies");
         categoryRepository.save(category);
         
         // GraphQL query request
@@ -80,11 +94,11 @@ public class GraphQLIntegrationTest {
     @Test
     void products_shouldReturnListofProducts() {
         // create a user
-        User user = new User("jade@plushies.com", "jadewillgetherofferletterthisyear!", "Jade", "Tran", Set.of(Role.SELLER));
+        User user = new User("jadetran@plushies.com", "jadewillgetherofferletterthisyear!", "Jade", "Tran", Set.of(Role.SELLER));
         userRepository.save(user);
 
         // create a seller profile
-        SellerProfile sellerProfile = new SellerProfile(user, "Plushies Store", "Pink store that sells cutie plushies!");
+        SellerProfile sellerProfile = new SellerProfile(user, "Jade Plushies Store", "Pink store that sells cutie plushies!");
         sellerRepository.save(sellerProfile);
 
         // create a category

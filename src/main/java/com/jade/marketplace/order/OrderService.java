@@ -150,6 +150,9 @@ public class OrderService {
             order.addItem(orderItem);
         }
 
+        // set order status
+        order.setOrderStatus(OrderStatus.CONFIRMED);
+
         // save the order
         Order savedOrder = orderRepository.save(order);
 

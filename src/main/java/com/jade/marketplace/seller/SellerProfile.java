@@ -57,6 +57,12 @@ public class SellerProfile {
      */
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    /**
+     * Default constructor
+     */
+    public SellerProfile() {
+    }
     
     /**
      * Constructor

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
+import io.lettuce.core.dynamic.annotation.Param;
 import jakarta.persistence.LockModeType;
 
 /**
@@ -30,5 +31,5 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
      */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select i from Inventory i where i.product.id = :productId")
-    Optional<Inventory> findByProductIdForUpdate(Long productId);
+    Optional<Inventory> findByProductIdForUpdate(@Param("productId") Long productId);
 }

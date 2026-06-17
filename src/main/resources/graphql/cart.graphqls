@@ -2,24 +2,24 @@ type Cart {
     id: ID!
     user: User!
     items: [CartItem!]!
-    updatedAt: LocalDateTime!
+    updatedAt: String!
 }
 
 type CartItem {
     id: ID!
     cart: Cart!
     product: Product!
-    quantity: Integer!
+    quantity: Int!
 }
 
 input AddToCartRequest {
     productId: ID!
-    quantity: Integer!
+    quantity: Int!
 }
 
 input UpdateCartItemRequest {
     productId: ID!
-    quantity: Integer!
+    quantity: Int!
 }
 
 extend type Query {

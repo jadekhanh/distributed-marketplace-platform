@@ -13,7 +13,15 @@ type Order {
     items: [OrderItem!]!
     status: OrderStatus
     totalAmount: Float!
-    createdAt: LocalDateTime!
+    createdAt: String!
+}
+
+type OrderItem {
+    id: ID!
+    order: Order!
+    product: Product!
+    quantity: Int!
+    unitPrice: Float!
 }
 
 extend type Query {

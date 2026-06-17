@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+
+import com.jade.marketplace.inventory.InventoryRepository;
+import com.jade.marketplace.inventory.Inventory;
+import com.jade.marketplace.product.Product;
+import com.jade.marketplace.product.ProductRepository;
 
 /**
  * E2E test for marketplace flow
@@ -37,6 +43,18 @@ public class MarketplaceE2ETest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private InventoryRepository inventoryRepository;
+
+    @BeforeEach
+    void cleanDatabase() {
+        inventoryRepository.deleteAll();
+        productRepository.deleteAll();
+    }
 
     /**
      * Send GraphQL request
@@ -66,7 +84,7 @@ public class MarketplaceE2ETest {
                         password: "whoopiewhoopiedoop",
                         firstName: "%s",
                         lastName: "%s",
-                        role: %s,
+                        role: %s
                     }) {
                         email
                         token
@@ -168,7 +186,7 @@ public class MarketplaceE2ETest {
                 mutation {
                     createCategory(request: {
                         name: "Toys",
-                        description: "Toys for kitty and plushies gang",
+                        description: "Toys for kitty and plushies gang"
                     }) {
                         id
                         name
@@ -191,8 +209,8 @@ public class MarketplaceE2ETest {
                         description: "A Halloween ghostie to take care of you when you sleep!",
                         price: 35.95,
                         quantity: 10,
-                        categoryId: "%s"
-                        imageUrl: [https://plushies.com/ghostie.jpg]
+                        categoryId: "%s",
+                        url: "https://plushies.com/ghostie.jpg"
                     }) {
                         id
                         name
@@ -206,10 +224,14 @@ public class MarketplaceE2ETest {
         String productResponse = sendAuthenticationGraphQL(sellerToken, productMutation);
 
         // asserts that product JSON response contains product name
-        assertTrue(sellerResponse.contains("Ghostie ghostie"));
+        assertTrue(productResponse.contains("Ghostie ghostie"));
 
         // extract product ID from product JSON response
         String productId = extractIdFromResponse(productResponse);
+
+        // create inventory for product
+        Product product = productRepository.findById(Long.valueOf(productId)).orElseThrow();
+        inventoryRepository.save(new Inventory(product, 10));
 
         // create a buyer token
         String buyerToken = registerAndExtractToken("mochi@plushies.com", "Mochi", "Tran", "BUYER");
@@ -251,8 +273,8 @@ public class MarketplaceE2ETest {
         // create order response with buyer token
         String orderResponse = sendAuthenticationGraphQL(buyerToken, orderMutation);
 
-        // asserts order JSON response says PENDING status
-        assertTrue(orderResponse.contains("PENDING"));
+        // asserts order JSON response says CONFIRMED status
+        assertTrue(orderResponse.contains("CONFIRMED"));
 
         // extract order ID from order JSON response
         String orderId = extractIdFromResponse(orderResponse);
@@ -261,7 +283,7 @@ public class MarketplaceE2ETest {
         String paymentMutation = 
             """
                 mutation {
-                    processPayment(request: {
+                    createPayment(request: {
                         orderId: "%s",
                         paymentMethodToken: "this-token-is-super-yummy!"
                     }) {
@@ -275,8 +297,8 @@ public class MarketplaceE2ETest {
         // create payment response with buyer token
         String paymentResponse = sendAuthenticationGraphQL(buyerToken, paymentMutation);
 
-        // asserts payment JSON response says "PROCESSED"
-        assertTrue(paymentResponse.contains("PROCESSED"));
+        // asserts payment JSON response says "COMPLETED"
+        assertTrue(paymentResponse.contains("COMPLETED"));
 
     }
 }

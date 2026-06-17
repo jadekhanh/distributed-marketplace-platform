@@ -56,6 +56,12 @@ public class CartItem {
     private Integer quantity;
 
     /**
+     * Default constructor
+     */
+    public CartItem() {
+    }
+
+    /**
      * Constructor
      */
     public CartItem(Product product, Integer quantity) {

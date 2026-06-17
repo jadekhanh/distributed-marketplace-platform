@@ -59,6 +59,12 @@ public class OrderItem {
     private BigDecimal unitPrice;
 
     /**
+     * Default constructor
+     */
+    public OrderItem() {
+    }
+
+    /**
      * Constructor
      * Don't need to have Order order as a parameter because when we create Order, we add these items inside order to establish relationship between them
      */

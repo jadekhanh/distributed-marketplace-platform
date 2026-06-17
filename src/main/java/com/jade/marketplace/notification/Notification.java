@@ -66,6 +66,12 @@ public class Notification {
     private LocalDateTime createdAt;
 
     /**
+     * Default constructor
+     */
+    public Notification() {
+    }
+
+    /**
      * Constructor
      */
     public Notification(User user, NotificationType type, String message) {

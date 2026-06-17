@@ -1,6 +1,7 @@
 package com.jade.marketplace.cart;
 
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.stereotype.Controller;
 
 import jakarta.validation.Valid;
@@ -24,13 +25,15 @@ public class CartMutation {
     /**
      * Adds a product to the current user's cart
      */
+    @MutationMapping
     public Cart addToCart(@Argument @Valid AddToCartRequest request) {
-        return cartService.addItem(request);
+        return cartService.addToCart(request);
     }
 
     /**
      * Update a product from current user's cart
      */
+    @MutationMapping
     public Cart updateCart(@Argument @Valid UpdateCartItemRequest request) {
         return cartService.updateCart(request);
     }
@@ -38,6 +41,7 @@ public class CartMutation {
     /**
      * Remove a product from current user's cart
      */
+    @MutationMapping
     public Cart removeFromCart(Long productId) {
         return cartService.removeFromCart(productId);
     }
@@ -45,9 +49,9 @@ public class CartMutation {
     /**
      * Remove all products from current user's cart
      */
+    @MutationMapping
     public Cart removeAllFromCart() {
         return cartService.removeAllFromCart();
     }
 
-    
 }

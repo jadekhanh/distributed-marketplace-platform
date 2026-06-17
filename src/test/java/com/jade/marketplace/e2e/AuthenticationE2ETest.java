@@ -56,7 +56,7 @@ public class AuthenticationE2ETest {
         Map<String, String> registerBody = Map.of("query", registerMutation);
 
         // send registration request and return response as a String
-        String registerResponse = restTemplate.postForObject("http://localhost:" + port + "graphql", registerBody, String.class);
+        String registerResponse = restTemplate.postForObject("http://localhost:" + port + "/graphql", registerBody, String.class);
 
         // asserts response contains token
         assertTrue(registerResponse.contains("token"));
@@ -69,7 +69,7 @@ public class AuthenticationE2ETest {
         // output response: email, token
         String loginMutation = """
                 mutation {
-                    register(request: {
+                    login(request: {
                         email: "echle@plushies.com",
                         password: "echlekhongcopybaiban!"
                     }) {
@@ -83,7 +83,7 @@ public class AuthenticationE2ETest {
         Map<String, String> loginBody = Map.of("query", loginMutation);
 
         // send login request and return response as a String
-        String loginResponse = restTemplate.postForObject("http://localhost:" + port + "graphql", loginBody, String.class);
+        String loginResponse = restTemplate.postForObject("http://localhost:" + port + "/graphql", loginBody, String.class);
 
         // asserts response contains token
         assertTrue(loginResponse.contains("token"));

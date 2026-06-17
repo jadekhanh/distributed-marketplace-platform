@@ -41,6 +41,12 @@ public class Category {
     private LocalDateTime createdAt;
 
     /**
+     * Default constructor
+     */
+    public Category() {
+    }
+
+    /**
      * Constructor
      */
     public Category(String name, String description) {

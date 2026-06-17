@@ -1,13 +1,13 @@
 type Product {
     id: ID!
-    sellerProfile: sellerProfile!
+    sellerProfile: SellerProfile!
     category: Category!
     name: String!
     description: String!
     price: Float!
-    quantity: Integer!
+    quantity: Int!
     images: [ProductImage!]!
-    createdAt: LocalDateTime!
+    createdAt: String!
 }
 
 type ProductImage {
@@ -20,14 +20,23 @@ input CreateProductRequest {
     name: String!
     description: String
     price: Float!
-    quantity: Integer!
-    category: Category!
+    quantity: Int!
+    categoryId: ID!
     url: [String!]!
+}
+
+input UpdateProductRequest {
+    name: String
+    description: String
+    price: Float
+    quantity: Int
+    categoryId: ID
+    urls: [String!]
 }
 
 extend type Query {
     product(id: ID!): Product!
-    products(): [Product!]!
+    products: [Product!]!
     productsByCategory(categoryId: ID!): [Product!]!
     productsBySeller(sellerId: ID!): [Product!]!
     searchProducts(keyword: String!): [Product!]!

@@ -58,10 +58,17 @@ public class Cart {
     private LocalDateTime updatedAt;
 
     /**
+     * Default constructor
+     */
+    public Cart() {
+    }
+
+    /**
      * Constructor
      */
     public Cart(User user) {
         this.user = user;
+        this.updatedAt = LocalDateTime.now();
     }
 
     /**

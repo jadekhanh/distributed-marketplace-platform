@@ -12,10 +12,10 @@ type Payment {
     status: PaymentStatus!
     transactionId: String!
     refundTransactionId: String!
-    createdAt: LocalDateTime!
-    completedAt: LocalDateTime!
-    failedAt: LocalDateTime!
-    refundedAt: LocalDateTime!
+    createdAt: String!
+    completedAt: String!
+    failedAt: String!
+    refundedAt: String!
 }
 
 input CreatePaymentRequest {

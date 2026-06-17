@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.jade.marketplace.category.Category;
+import com.jade.marketplace.category.CategoryRepository;
 import com.jade.marketplace.exception.ForbiddenException;
 import com.jade.marketplace.exception.ResourceNotFoundException;
 import com.jade.marketplace.redis.ProductCacheService;
@@ -27,14 +29,16 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final SellerService sellerService;
     private final ProductCacheService productCacheService;
+    private final CategoryRepository categoryRepository;
 
     /**
      * Constructor
      */
-    public ProductService(ProductRepository productRepository, SellerService sellerService, ProductCacheService productCacheService) {
+    public ProductService(ProductRepository productRepository, SellerService sellerService, ProductCacheService productCacheService, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.sellerService = sellerService;
         this.productCacheService = productCacheService;
+        this.categoryRepository = categoryRepository;
     }
 
     /**
@@ -107,8 +111,11 @@ public class ProductService {
         // get user's seller profile
         SellerProfile sellerProfile = sellerService.getSellerProfile();
 
+        // get category
+        Category category = categoryRepository.findById(request.categoryId()).get();
+
         // create a new product
-        Product product = new Product(sellerProfile, request.name(), request.description(), request.category(), request.price(), request.quantity());
+        Product product = new Product(sellerProfile, request.name(), request.description(), category, request.price(), request.quantity());
 
         // add images to the new product
         addImages(product, request.url());

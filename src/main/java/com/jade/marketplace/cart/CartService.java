@@ -75,7 +75,7 @@ public class CartService {
      * If a product already exsist in cart, increases its quantity
      * Else, create a new product item inside cart
      */
-    public Cart addItem(AddToCartRequest request) {
+    public Cart addToCart(AddToCartRequest request) {
         // get cart
         Cart cart = getCart();
 

@@ -95,6 +95,12 @@ public class Payment {
     private LocalDateTime refundedAt;
 
     /**
+     * Default constructor
+     */
+    public Payment() {
+    }
+
+    /**
      * Constructor for creating payment in PENDING state
      */
     public Payment(Order order, BigDecimal totalAmount) {
