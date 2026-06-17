@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: marketplace-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: marketplace-mysql
+  template:
+    metadata:
+      labels:
+        app: marketplace-mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.4
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+            - name: MYSQL_DATABASE
+              value: "jade_and_plushies_gang_marketplace"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: marketplace-mysql
+spec:
+  selector:
+    app: marketplace-mysql
+  ports:
+    - port: 3306
+      targetPort: 3306

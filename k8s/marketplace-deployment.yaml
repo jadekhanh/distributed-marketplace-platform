@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: marketplace-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: marketplace-app
+  template:
+    metadata:
+      labels:
+        app: marketplace-app
+    spec:
+      containers:
+        - name: marketplace-app
+          image: jade-and-plushies-gang-marketplace:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: marketplace-config
+          env:
+            - name: MYSQL_USER
+              value: "root"
+            - name: MYSQL_PASSWORD
+              value: "root"
+            - name: JWT_SECRET
+              value: "jade-is-super-secret-and-plushies-are-super-noisy"
+            - name: JWT_EXPIRATION_MS
+              value: "86400000"

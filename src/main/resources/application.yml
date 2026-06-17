@@ -1,21 +1,14 @@
 spring:
   application:
-    name: jade-and-plushies-gang-distributed-marketplace-platform
+    name: jade-and-plushies-gang-marketplace
+
+  profiles:
+    active: dev
 
   datasource:
-    url: jdbc:mysql://localhost:3306/jade-marketplace
-    username: root
-    password: root
-
-  data:
-    redis:
-      host: localhost
-      port: 6380
-
-  aws:
-    region: ${AWS_REGION:us-east-2}
-    s3:
-      bucket: ${AWS_S3_BUCKET:marketplace-dev}
+    url: jdbc:mysql://localhost:3306/jade-and-plushies-gang-marketplace
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:root}
 
   jpa:
     hibernate:
@@ -28,5 +21,32 @@ spring:
   flyway:
     enabled: true
 
-  server:
-    port: 8080
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6380}
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: marketplace-service
+      auto-offset-reset: earliest
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring.json.trusted.packages: "com.jade.marketplace.kafka.events"
+
+server:
+  port: ${SERVER_PORT:8080}
+
+jwt:
+  secret: ${JWT_SECRET:jade-is-super-secret-and-plushies-are-super-noisy}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+aws:
+  region: ${AWS_REGION:us-east-2}
+  s3:
+    bucket: ${AWS_S3_BUCKET:marketplace-dev}

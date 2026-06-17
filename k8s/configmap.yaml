@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: marketplace-config
+
+data:
+  SPRING_PROFILES_ACTIVE: "prod"
+  SERVER_PORT: "8080"
+
+  MYSQL_HOST: "marketplace-mysql"
+  MYSQL_PORT: "3306"
+  MYSQL_DATABASE: "jade_and_plushies_gang_marketplace"
+
+  REDIS_HOST: "marketplace-redis"
+  REDIS_PORT: "6379"
+
+  KAFKA_BOOTSTRAP_SERVERS: "marketplace-kafka:9092"
+
+  AWS_REGION: "us-east-2"
+  AWS_S3_BUCKET: "jade-and-plushies-gang-marketplace-dev"
