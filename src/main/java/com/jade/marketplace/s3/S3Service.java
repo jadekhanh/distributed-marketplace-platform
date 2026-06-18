@@ -25,17 +25,14 @@ public class S3Service {
 
     /**
      * S3 bucket name which is read from application.yml
-     * 
-     * Example: aws.bucket=marketplace-dev
      */
     @Value("${aws.s3.bucket}")
     private String bucketName;
 
     /**
      * AWS region which is read from application.yml
-     * Example: aws.region=use-east-2
      */
-    @Value("${aws.s3.region}")
+    @Value("${aws.region}")
     private String region;
 
     /**
@@ -49,6 +46,7 @@ public class S3Service {
      * Uploads image bytes to S3 under a given object key
      * Example: 
      * object key = products/1/image-milu-day-1.png
+     * Inside S3, the image will have a path: distributed-marketplace-platform/products/1/image-milu-day-1.png
      * fileBytes = imageBytes
      * contentType = "image/png" or "image/jpeg"
      */
@@ -62,7 +60,7 @@ public class S3Service {
 
     /**
      * Builds a standard S3 image URL
-     * Example: convert "products/1/image-milu-day-1.png" into "https://marketplace-dev.s3.us-east-2.amazonaws.com/products/1/milu.png"
+     * Example: convert "products/1/image-milu-day-1.png" into "https://distributed-marketplace-platform.s3.us-east-2.amazonaws.com/products/1/milu.png"
      */
     public String buildObjectUrl(String key) {
         return "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + key;

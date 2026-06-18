@@ -10,3 +10,8 @@ logging:
     org.hibernate.SQL: DEBUG
     org.springframework.security: INFO
     org.springframework.graphql: INFO
+
+aws:
+  region: ${AWS_REGION}
+  s3:
+    bucket: ${AWS_S3_BUCKET}

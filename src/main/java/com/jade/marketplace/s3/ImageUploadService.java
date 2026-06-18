@@ -49,6 +49,12 @@ public class ImageUploadService {
     @Transactional
     public Product uploadProductImage(Long productId, MultipartFile file) {
 
+        // get product this image file belongs to
+        Product product = productService.findById(productId);
+
+        // confirms that this user owns the product
+        productService.validateCurrentUserIsProductOwner(product);
+
         // check if image file is empty
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("Image file is required");
@@ -58,9 +64,6 @@ public class ImageUploadService {
         if (file.getContentType() == null || !file.getContentType().startsWith("image/")) {
             throw new IllegalArgumentException("Uploaded file must be an image");
         }
-
-        // get product this image file belongs to
-        Product product = productService.findById(productId);
 
         try {
             // build image key / file name

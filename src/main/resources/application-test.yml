@@ -21,8 +21,6 @@ logging:
     root: WARN
 
 aws:
+  region: ${AWS_REGION:us-east-2}
   s3:
-    region: us-east-1
-    bucket-name: test-bucket
-    access-key: test-access-key
-    secret-key: test-secret-key
+    bucket: ${AWS_S3_BUCKET}

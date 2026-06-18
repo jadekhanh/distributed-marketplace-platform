@@ -43,6 +43,12 @@ public class ProductImage {
     public String url;
 
     /**
+     * Default constructor
+     */
+    public ProductImage() {
+    }
+
+    /**
      * Constructor
      */
     public ProductImage(Product product, String url) {

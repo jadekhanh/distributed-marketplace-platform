@@ -49,4 +49,4 @@ jwt:
 aws:
   region: ${AWS_REGION:us-east-2}
   s3:
-    bucket: ${AWS_S3_BUCKET:marketplace-dev}
+    bucket: ${AWS_S3_BUCKET:jade-and-plushies-gang-marketplace}

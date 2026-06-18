@@ -84,15 +84,18 @@ public class ProductService {
     /**
      * Ensures that the current user is the product owner before mutating products
      */
-    private void validateProductOwner(Product product, SellerProfile sellerProfile) {
+    public void validateCurrentUserIsProductOwner(Product product) {
+        // get seller profile from server
+        SellerProfile sellerProfile = sellerService.getSellerProfile();
+
         // get seller profile from product
         SellerProfile productSellerProfile= product.getSellerProfile();
 
-        // compare seller profile with the seller profile from product
+        // compare seller profile with the seller profile of product
         if (!sellerProfile.equals(productSellerProfile)) {
             throw new ForbiddenException("You do not have permission to mofidy this product");
         }
-    } 
+    }
 
     /**
      * Add images into product
@@ -136,14 +139,11 @@ public class ProductService {
      */
     @Transactional
     public Product updateProduct(Long productId, UpdateProductRequest request) {
-        // get user's seller profile
-        SellerProfile sellerProfile = sellerService.getSellerProfile();
-
         // get product
         Product product = findById(productId);
 
         // check if the seller profile is the same seller profile of the product
-        validateProductOwner(product, sellerProfile);
+        validateCurrentUserIsProductOwner(product);
 
         // if request wants to change product name
         if (request.name() != null || !request.name().isBlank()) {
@@ -195,14 +195,11 @@ public class ProductService {
      */
     @Transactional
     public boolean deleteProduct(Long productId) {
-        // get user's seller profile
-        SellerProfile sellerProfile = sellerService.getSellerProfile();
-
         // get product
         Product product = findById(productId);
 
         // check if the seller profile matches the seller profile of this product
-        validateProductOwner(product, sellerProfile);
+        validateCurrentUserIsProductOwner(product);
 
         // delete the product from repository
         productRepository.delete(product);

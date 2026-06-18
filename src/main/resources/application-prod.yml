@@ -10,3 +10,8 @@ logging:
     root: INFO
     org.hibernate.SQL: WARN
     org.springframework.security: WARN
+
+aws:
+  region: ${AWS_REGION}
+  s3:
+    bucket: ${AWS_S3_BUCKET}
