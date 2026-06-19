@@ -4,13 +4,13 @@ spring:
 
   profiles:
     active: dev
-  
+
   graphql:
     graphiql:
       enabled: true
 
   datasource:
-    url: jdbc:mysql://localhost:3306/jade-and-plushies-gang-marketplace
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:jade_and_plushies_gang_marketplace}
     username: ${MYSQL_USER:root}
     password: ${MYSQL_PASSWORD:root}
 
@@ -18,6 +18,7 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+    open-in-view: false
     properties:
       hibernate:
         format_sql: true
@@ -28,20 +29,35 @@ spring:
   data:
     redis:
       host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6380}
+      port: ${REDIS_PORT:6379}
 
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
       group-id: marketplace-service
       auto-offset-reset: earliest
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "com.jade.marketplace.kafka.events"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+info:
+  app:
+    name: Distributed Marketplace Platform
+    version: 1.0.0
+    description: Amazon-inspired marketplace backend
 
 server:
   port: ${SERVER_PORT:8080}

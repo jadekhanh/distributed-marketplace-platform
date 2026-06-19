@@ -15,10 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.jade.marketplace.common.constants.KafkaTopics;
-import com.jade.marketplace.inventory.InventoryService;
 import com.jade.marketplace.kafka.events.OrderPlacedEvent;
 import com.jade.marketplace.kafka.producer.OrderEventProducer;
 
@@ -37,14 +35,11 @@ public class KafkaIntegrationTest {
     @Autowired
     private ConsumerFactory<String, Object> consumerFactory;
 
-    @MockitoBean
-    private InventoryService inventoryService;
-
     /**
      * Veryify OrderEventProducer publishes OrderPlacedEvent and the arrives in the Kafka topic
      */
     @Test
-    void publishOrderPlace_shouldSendEventToKafkaTopic() {
+    void publishOrderPlaced_shouldSendEventToKafkaTopic() {
 
         /**
          * Creates Kafka consumer

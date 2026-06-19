@@ -8,7 +8,7 @@ Developed by Phuong Khanh Tran (Jade Tran)
 - Spring Boot: backend framework for application services and dependency management
 - Spring Security: JWT-based authentication, authorization, and role-based access control
 - GraphQL: API layer for marketplace mutations and queries
-- Kafka: event streaming for order, payment, inventory, and review workflows
+- Kafka: event publishing for order, payment, inventory, and review workflows with dead-letter queue support
 - Redis: in-memory cache used to accelerate product and cart lookups
 - MySQL: relational database for users, products, carts, cart items, orders, order items, payments, reviews, inventories, seller profiles, and notifications
 - AWS S3: object storage for product images
@@ -171,8 +171,7 @@ Flyway will create database tables from migration files
 http://localhost:8080/graphiql
 ```
 
-The actual GraphQL API endpoint is:
-http://localhost:8080/graphql
+The actual GraphQL API endpoint is: http://localhost:8080/graphql
 
 ### Health check on web browser
 ```
@@ -202,4 +201,11 @@ Make sure Kubernetes cluster is running first
 kubectl config use-context docker-desktop 
 kubectl get nodes
 kubectl apply -f k8s/
+```
+
+### Monitoring
+Spring Boot Actuator endpoints:
+```
+http://localhost:8080/actuator/health
+http://localhost:8080/actuator/info
 ```
