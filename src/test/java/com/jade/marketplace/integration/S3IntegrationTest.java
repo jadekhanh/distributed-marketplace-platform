@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-// @Disabled("Requires real AWS S3 credentials and bucket")
+@Disabled("Requires real AWS S3 credentials and bucket")
 class S3IntegrationTest {
 
     @Autowired

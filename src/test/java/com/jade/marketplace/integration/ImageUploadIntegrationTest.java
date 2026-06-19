@@ -40,7 +40,7 @@ import jakarta.transaction.Transactional;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-// @Disabled("Requires real AWS S3 credentials and bucket")
+@Disabled("Requires real AWS S3 credentials and bucket")
 public class ImageUploadIntegrationTest {
     
     @Autowired

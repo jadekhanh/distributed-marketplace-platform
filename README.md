@@ -15,7 +15,6 @@ Developed by Phuong Khanh Tran (Jade Tran)
 - Docker: containerized local development environment
 - Kubernetes: local deployment manifests for distributed services
 - Flyway: database schema migrations
-- Mockito: unit testing framework
 - JUnit/Spring Boot Test: integration and end-to-end testing framework
 
 ## Features
@@ -89,10 +88,6 @@ Developed by Phuong Khanh Tran (Jade Tran)
 - Product image URLs are stored in MySQL database
 
 ### Testing
-### Unit
-- UserService
-- ProductService
-
 #### Integration
 - ConcurrentIntegrationCheckoutTest
 - MarketplaceFlowIntegrationTest
@@ -190,8 +185,7 @@ mvn test
 ```
 
 ### Run S3 tests
-S3 tests are disabled by default because they require real AWS credentials
-To run them, temporarily remove @Disabled from S3IntegrationTest and ImageUploadIntegrationTest, then run:
+S3 tests are disabled by default because they require real AWS credentials. To run them, temporarily remove @Disabled from S3IntegrationTest and ImageUploadIntegrationTest, then run:
 ```
 mvn test -Dtest=S3IntegrationTest
 mvn test -Dtest=ImageUploadIntegrationTest
