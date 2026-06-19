@@ -16,7 +16,7 @@ CREATE TABLE reviews (
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
 
     -- user comment
-    comment VARCHAR(2000),
+    comment VARCHAR(500),
 
     -- non-null LocalDateTime created at timestamp
     created_at DATETIME NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE reviews (
         -- if a product is deleted from "products", their rows in "reviews" are deleted too
         ON DELETE CASCADE,
     
-    -- only one review per product per buyer
-    CONSTRAINT unique_review_product_buyer
-        UNIQUE (product_id, buyer_id)
+    -- only one review per product per user
+    CONSTRAINT unique_review_product_user
+        UNIQUE (product_id, user_id)
 );

@@ -19,6 +19,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     /**
      * Finds unread notifications for a user, newest first 
      */
-    List<Notification> findByUserAndReadFalseOrderByCreatedAtDesc(User user);
+    List<Notification> findByUserAndIsReadFalseOrderByCreatedAtDesc(User user);
     
 }

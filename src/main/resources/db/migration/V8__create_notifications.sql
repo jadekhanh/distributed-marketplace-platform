@@ -13,10 +13,10 @@ CREATE TABLE notifications (
     type VARCHAR(100) NOT NULL,
 
     -- non-null message
-    message VARCHAR(2000) NOT NULL,
+    message VARCHAR(500) NOT NULL,
 
     -- non-null read
-    read BOOLEAN NOT NULL DEFAULT FALSE,
+    is_read BOOLEAN NOT NULL DEFAULT FALSE,
 
     -- non-null LocalDateTime created at timestamp
     created_at DATETIME NOT NULL,

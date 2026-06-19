@@ -3,134 +3,209 @@ Inspired by Amazon, this is a backend e-commerce marketplace, where buyers brows
 
 Developed by Phuong Khanh Tran (Jade Tran)
 
-## Tech Stacks
-- Java: primary programming language
-- Spring Boot: backend framework to build application, manage dependencies, and system components
-- Spring Security: provides JWT-based authentication, authorization, and role-based access control
-- GraphQL: API layer to allow clients query and mutate data
-- Kafka: event streaming platform for asynchronous order processing, inventory updates, and notifications
-- Redis: in-memory cache used to accelerate product lookups, dashboards, and frequently accessed data
-- MySQL: relational database for marketplace data
-- AWS S3: object storage service to store and serve produc images and other uploaded files
-- Docker: containerization platform to package and run application services
-- Kubernetes: containerization platform to deploy, scale, and manage distributed services
-- Mockito: testing framework
+## Tech Stack
+- Java: main programming language
+- Spring Boot: backend framework for application services and dependency management
+- Spring Security: JWT-based authentication, authorization, and role-based access control
+- GraphQL: API layer for marketplace mutations and queries
+- Kafka: event streaming for order, payment, inventory, and review workflows
+- Redis: in-memory cache used to accelerate product and cart lookups
+- MySQL: relational database for users, products, carts, cart items, orders, order items, payments, reviews, inventories, seller profiles, and notifications
+- AWS S3: object storage for product images
+- Docker: containerized local development environment
+- Kubernetes: local deployment manifests for distributed services
+- Flyway: database schema migrations
+- Mockito: unit testing framework
+- JUnit/Spring Boot Test: integration and end-to-end testing framework
 
 ## Features
 ### Authentication
 - User registration and login
 - JWT-based authentication
-- Role based access: buyer, seller, admin
+- Role-based access: BUYER, SELLER, ADMIN
+- Only ADMIN and SELLER have access to modifying products and categories
 
-### Product Catalog
-- Create/edit/delete products
-- Product categorires
-- Product search/filetring
-- Product detail page
-- Product images stored in AWS S3
-- Redis caching for product detail pages
+### Product
+- Create, update, and delete products
+- Query product by id, seller, category, and keyword
+- Product images upload using AWS S3
+- Product image URLs stored in MySQL
+- Redis caching for product and cart lookups
 
-### Seller Feaures
-- Seller storefront/profile
+### Seller Profile
+- Create, update, and delete seller/storefront profiles
+- Query seller profile by ID and current user
 - Manage product listings
-- Manage inventory quantity
-- View seller orders
+- Upload product images
 
-### Buyer Features
+### Buyer
 - Browse products
-- Add/remove cart items
-- Checkout
+- Add, update, remove cart items
+- Place orders from cart
 - View order history
-- Leave product reviews
+- Leave, edit, and delete product reviews
 
-### Inventory & Order Processing
+### Category
+- Create, update, delete product category
+- Query all categories or category by ID
+
+### Inventory
+- Product inventory stores product available quantity and reserved quantity
 - Prevent overselling during concurrent checkout
-- Reverse inventory when order is placed
-- Track order status: PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED
+- Reserve inventory during order placement
+- Release inventory reservation when payment fails
+
+### Order
+- Place and cancel an order
+- Query an order by ID and view order history
+- Order status: PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED
+
+### Payment
+- Simulated payment processing and refund for an order
+- Query payment by ID or order ID
+
+### Review
+- Create, update, and delete product review
+- Query a review by ID
+- Query all reviews belonging to a product from most recent orders
+
+### Notification
+- Mark one notification as read
+- Mark all unread notifications as read
+- Query all notifications by user ID
+- Query all unread notifications by user ID
 
 ### Kafka Events 
-- Order placement
-- Order confirmation
-- Order cancellation
-- Inventory reversal
-- Failed inventory reversal
-- Payment process
-- Product update
-- Review addition
+- ORDER_PLACED
+- ORDER_CANCELLED
+- PAYMENT_PROCESSED
+- PAYMENT_FAILED
+- INVENTORY_RESERVED
+- INVENTORY_RESERVATION_FAILED
+- REVIEW_CREATED
 
-### Notification Workflow
-- Kafka consumer creates order notifications
-- Buyer receives order updates
-- Seller receives new order alerts
-
-### GraphQL API
-#### Queries
-- Product detail
-- Product search
-- Buyer cart
-- Order history
-- Seller dashboard
-
-#### Mutations
-- Register/login
-- Create product
-- Upload product image
-- Add to cart
-- Place order
-- Update inventory
-- Add review
+### AWS S3 Image Upload
+- Product images are uploaded to AWS S3
+- Product image URLs are stored in MySQL database
 
 ### Testing
-- OrderServiceTest
-- InventoryServiceTest
-- ConcurrentCheckoutTest
-- ProductServiceTest
-- AuthServiceTest
-- OrderFlowIntegrationTest
-- KafkaIntegrationTest
+### Unit
+- UserService
+- ProductService
+
+#### Integration
+- ConcurrentIntegrationCheckoutTest
+- MarketplaceFlowIntegrationTest
 - GraphQLIntegrationTest
+- S3IntegrationTest
+- AuthenticationIntegrationTest
+- ImageUploadIntegrationTest
+- KafkaIntegrationTest
+
+#### End-to-end
+- AuthenticationE2ETest
+- MarketplaceE2ETest
 
 ## Run Instructions
 ### Create .env file at root
 ```
-MYSQL_DATABASE=marketplace
-MYSQL_USER=marketplace_user
-MYSQL_PASSWORD=marketplace_password
+APP_NAME=jade-and-plushies-gang-marketplace
+SERVER_PORT=8080
 
+MYSQL_ROOT_PASSWORD=root
+MYSQL_DATABASE=jade-and-plushies-gang-marketplace
+MYSQL_USER=root
+MYSQL_PASSWORD=root
+MYSQL_HOST=localhost
+MYSQL_PORT=3306
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6380
+
+# Kafka
+KAFKA_BOOTSTRAP_SERVERS=localhost:9092
+
+# JWT
 JWT_SECRET=your_local_secret
+JWT_EXPIRATION_MS=86400000
 
+# AWS S3
 AWS_ACCESS_KEY_ID=your_key
 AWS_SECRET_ACCESS_KEY=your_secret
 AWS_REGION=us-east-2
 AWS_S3_BUCKET=your_bucket_name
 ```
 
-### Start dependencies: MySQL, Redis, Kafka, Zookeeper/Raft
+### Configure AWS Credentials
+```
+aws configure
+```
+
+### Start dependencies: MySQL, Redis, Kafka
 ```
 docker compose up -d
 ```
 
+### Create MySQL database
+```
+docker compose exec mysql mysql -u root -p
+```
+
+Then inside MySQL:
+```
+CREATE DATABASE `jade-and-plushies-gang-marketplace`;
+exit;
+```
+
+If resetting the local database:
+```
+DROP DATABASE `jade-and-plushies-gang-marketplace`; 
+CREATE DATABASE `jade-and-plushies-gang-marketplace`; 
+exit;
+```
+
 ### Run Spring Boot app
 ```
-./mvnw spring-boot:run
+mvn spring-boot:run
+```
+Flyway will create database tables from migration files
+
+### Open GraphiQL playground in web browser
+```
+http://localhost:8080/graphiql
 ```
 
-### Open GraphQL playground
-```
+The actual GraphQL API endpoint is:
 http://localhost:8080/graphql
+
+### Health check on web browser
+```
+http://localhost:8080/health
 ```
 
-### Run test
+### Run tests
 ```
-./mvnw test
+mvn test
 ```
 
-### Run with Docker
+### Run S3 tests
+S3 tests are disabled by default because they require real AWS credentials
+To run them, temporarily remove @Disabled from S3IntegrationTest and ImageUploadIntegrationTest, then run:
 ```
-docker compose up --build
+mvn test -Dtest=S3IntegrationTest
+mvn test -Dtest=ImageUploadIntegrationTest
+```
+
+### Stop local dependencies
+```
+docker compose down
 ```
 
 ### Deploy locally with Kubernetes
+Make sure Kubernetes cluster is running first
 ```
+kubectl config use-context docker-desktop 
+kubectl get nodes
 kubectl apply -f k8s/
 ```

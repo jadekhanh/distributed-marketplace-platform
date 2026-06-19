@@ -11,7 +11,7 @@ CREATE TABLE categories (
     name VARCHAR(255) NOT NULL UNIQUE,
 
     -- non-null description
-    description VARCHAR(1000) NOT NULL,
+    description VARCHAR(500) NOT NULL,
 
     -- non-null LocalDateTime created at timestamp
     created_at DATETIME NOT NULL
@@ -32,7 +32,7 @@ CREATE TABLE seller_profiles (
     store_name VARCHAR(255) NOT NULL UNIQUE,
 
     -- non-null description
-    description VARCHAR(1000) NOT NULL,
+    description VARCHAR(500) NOT NULL,
 
     -- non-null LocalDateTime created at timestamp
     created_at DATETIME NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE products (
     name VARCHAR(255) NOT NULL UNIQUE,
 
     -- non-null description
-    description VARCHAR(1000) NOT NULL,
+    description VARCHAR(500) NOT NULL,
 
     -- non-null price with precision = 10, scale = 2
     price DECIMAL(10, 2) NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE product_images (
     product_id BIGINT NOT NULL,
 
     -- non-null unique image URL
-    url VARCHAR(1000) NOT NULL UNIQUE,
+    url VARCHAR(500) NOT NULL UNIQUE,
 
     -- a constraint for foreign key from product_images to product
     CONSTRAINT foreign_key_product_images_to_product

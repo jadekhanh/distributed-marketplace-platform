@@ -4,6 +4,10 @@ spring:
 
   profiles:
     active: dev
+  
+  graphql:
+    graphiql:
+      enabled: true
 
   datasource:
     url: jdbc:mysql://localhost:3306/jade-and-plushies-gang-marketplace

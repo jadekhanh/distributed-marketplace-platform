@@ -94,7 +94,7 @@ public class NotificationService {
         User user = userService.getCurrentUser();
 
         // get all unread notifications belonged to the user
-        for (Notification notification : notificationRepository.findByUserAndReadFalseOrderByCreatedAtDesc(user)) {
+        for (Notification notification : notificationRepository.findByUserAndIsReadFalseOrderByCreatedAtDesc(user)) {
             // mark them as read
             notification.markAsRead();
 

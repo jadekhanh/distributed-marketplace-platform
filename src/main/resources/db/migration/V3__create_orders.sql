@@ -40,7 +40,7 @@ CREATE TABLE order_items (
     product_id BIGINT NOT NULL,
 
     -- non-null order item quantity
-    quantity INT NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
 
     -- non-null unit price
     unit_price DECIMAL(10, 2) NOT NULL,

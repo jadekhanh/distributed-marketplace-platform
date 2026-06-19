@@ -21,6 +21,6 @@ logging:
     root: WARN
 
 aws:
-  region: ${AWS_REGION:us-east-2}
+  region: us-east-2
   s3:
-    bucket: ${AWS_S3_BUCKET}
+    bucket: jade-and-plushies-gang-marketplace

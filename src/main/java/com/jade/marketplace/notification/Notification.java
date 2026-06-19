@@ -57,7 +57,7 @@ public class Notification {
      * A column to indicate if the user has read this notification
      */
     @Column(nullable = false)
-    private boolean read;
+    private boolean isRead;
 
     /**
      * A column for timestamp when notification is created
@@ -79,14 +79,14 @@ public class Notification {
         this.type = type;
         this.message = message;
         this.createdAt = LocalDateTime.now();
-        this.read = false;
+        this.isRead = false;
     }
 
     /**
      * Mark the notification as read
      */
     public void markAsRead() {
-        this.read = true;
+        this.isRead = true;
     }
 
     /**
@@ -121,7 +121,7 @@ public class Notification {
      * Check whether the notification is read
      */
     public boolean isRead() {
-        return read;
+        return isRead;
     }
 
     /**

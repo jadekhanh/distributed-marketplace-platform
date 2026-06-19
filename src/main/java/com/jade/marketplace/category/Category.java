@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * @Table name is called "category"
  */
 @Entity
-@Table(name="category")
+@Table(name = "categories")
 public class Category {
 
     /**
