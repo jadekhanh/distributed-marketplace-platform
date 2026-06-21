@@ -49,15 +49,25 @@ Developed by Phuong Khanh Tran (Jade Tran)
 - Query all categories or category by ID
 
 ### Inventory
-- Product inventory stores product available quantity and reserved quantity
+- Product inventory stores available and reserved quantity
 - Prevent overselling during concurrent checkout
 - Reserve inventory during order placement
-- Release inventory reservation when payment fails
+- Release inventory reservation when payment fails or orders are cancelled
+- Publish inventory events through Kafka
 
 ### Order
 - Place and cancel an order
+- Convert shopping cart contents into orders and order items
 - Query an order by ID and view order history
 - Order status: PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED
+
+### Cart
+- Create and maintain buyer shopping carts
+- Add, update, and remove cart items
+- Query current buyer cart
+- Calculate cart subtotal and item quantities
+- Calculate total amount of current buyer cart
+- Redis caching for frequently accessed cart data
 
 ### Payment
 - Simulated payment processing and refund for an order
@@ -87,9 +97,14 @@ Developed by Phuong Khanh Tran (Jade Tran)
 - Product images are uploaded to AWS S3
 - Product image URLs are stored in MySQL database
 
+### GraphQL API
+- Query products, categories, carts, orders, reviews, payments, seller profiles, and notifications
+- Mutate authentication, products, categories, carts, orders, payments, reviews, and seller profiles
+- Type-safe schema-first GraphQL design
+
 ### Testing
 #### Integration
-- ConcurrentIntegrationCheckoutTest
+- ConcurrentCheckoutIntegrationTest
 - MarketplaceFlowIntegrationTest
 - GraphQLIntegrationTest
 - S3IntegrationTest
@@ -191,7 +206,7 @@ mvn test -Dtest=ImageUploadIntegrationTest
 ```
 
 ### Run Kafka integration test
-KafkaIntegrationTest is disabled by default because Kafka in CI is flaly. To run it, temporarily remove @Disabled from KafkaIntegrationTest, then run:
+KafkaIntegrationTest is disabled by default because Kafka in CI is flaky. To run it, temporarily remove @Disabled from KafkaIntegrationTest, then run:
 ```
 mvn test -Dtest=KafkaIntegrationTest
 ```
