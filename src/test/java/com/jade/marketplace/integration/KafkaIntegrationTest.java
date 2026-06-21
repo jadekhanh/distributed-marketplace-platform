@@ -25,7 +25,7 @@ import com.jade.marketplace.kafka.producer.OrderEventProducer;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-@Disabled("Run this test independently")
+// @Disabled("Run this test independently")
 public class KafkaIntegrationTest {
     
     @Autowired
