@@ -183,11 +183,17 @@ http://localhost:8080/health
 mvn test
 ```
 
-### Run S3 tests
+### Run S3 integration tests
 S3 tests are disabled by default because they require real AWS credentials. To run them, temporarily remove @Disabled from S3IntegrationTest and ImageUploadIntegrationTest, then run:
 ```
 mvn test -Dtest=S3IntegrationTest
 mvn test -Dtest=ImageUploadIntegrationTest
+```
+
+### Run Kafka integration test
+KafkaIntegrationTest is disabled by default because Kafka in CI is flaly. To run it, temporarily remove @Disabled from KafkaIntegrationTest, then run:
+```
+mvn test -Dtest=KafkaIntegrationTest
 ```
 
 ### Stop local dependencies
