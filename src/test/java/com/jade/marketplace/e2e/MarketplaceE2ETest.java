@@ -14,11 +14,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.jade.marketplace.inventory.InventoryRepository;
 import com.jade.marketplace.inventory.Inventory;
 import com.jade.marketplace.product.Product;
 import com.jade.marketplace.product.ProductRepository;
+import com.jade.marketplace.redis.CartCacheService;
+import com.jade.marketplace.redis.ProductCacheService;
 
 /**
  * E2E test for marketplace flow
@@ -49,6 +52,12 @@ public class MarketplaceE2ETest {
 
     @Autowired
     private InventoryRepository inventoryRepository;
+
+    @MockitoBean
+    private ProductCacheService productCacheService;
+
+    @MockitoBean
+    private CartCacheService cartCacheService;
 
     @BeforeEach
     void cleanDatabase() {

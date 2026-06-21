@@ -14,12 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.jade.marketplace.category.Category;
 import com.jade.marketplace.category.CategoryRepository;
 import com.jade.marketplace.inventory.Inventory;
 import com.jade.marketplace.inventory.InventoryRepository;
 import com.jade.marketplace.inventory.InventoryService;
+import com.jade.marketplace.kafka.producer.InventoryEventProducer;
 import com.jade.marketplace.product.Product;
 import com.jade.marketplace.product.ProductRepository;
 import com.jade.marketplace.seller.SellerProfile;
@@ -58,6 +60,9 @@ public class ConcurrentCheckoutIntegrationTest {
 
     @Autowired
     private InventoryRepository inventoryRepository;
+
+    @MockitoBean
+    private InventoryEventProducer inventoryEventProducer;
 
     @BeforeEach
     void cleanDatabase() {
